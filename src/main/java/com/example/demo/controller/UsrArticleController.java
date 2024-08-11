@@ -64,6 +64,7 @@ public class UsrArticleController {
         }
         return null;
     }
+	
     //게시물 삭제.
     @RequestMapping("/usr/article/doDelete")
     @ResponseBody
@@ -78,22 +79,34 @@ public class UsrArticleController {
     	return id + "번 게시물 삭제.";
     }
     
+    //게시물 상세보기.
+    @RequestMapping("/usr/article/getArticle")
+	@ResponseBody
+	public Object getArticle(int id) {
+
+		Article article = findById(id);
+
+		if (article == null) {
+			return id + "번 글은 없음";
+		}
+
+		return article;
+	}
     //게시물 수정.
-    @RequestMapping("/usr/article/doModify")
-    @ResponseBody
-    public  String DoModifyArticle(int id, String newTitle, String newBody) {
-    	Article article = findById(id);
-    	
-    	if (article == null) {
-    		return id + "번 게시물 존재하지 않음.";
-    	} else {
-    		article.setTitle(newTitle);
-    		article.setBody(newBody);
-    	}
-    	//doModify?id=1%newTitle=%EC%83%88%EC%A0%9C%EB%AA%A9&newBody=%EC%83%88%EB%82%B4%EC%9A%A9
-    	
-    	return id + "번 게시물 수정.";
-    }
-    
+	@RequestMapping("/usr/article/doModify")
+	@ResponseBody
+	public Object doModify(int id, String title, String body) {
+
+		Article article = findById(id);
+
+		if (article == null) {
+			return id + "번 글은 없음";
+		} else {
+			article.setTitle(title);
+			article.setBody(body);
+		}
+
+		return article;
+	}
 
 }
