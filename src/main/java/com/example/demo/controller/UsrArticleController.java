@@ -18,11 +18,23 @@ public class UsrArticleController {
 	public UsrArticleController() {
 		lastArticleId = 0;
 		articles = new ArrayList<>();
+		
+		makeTestData();
+	}
+	
+	// 테스트데이터 생성.
+	private void makeTestData() {
+		for (int i = 1; i <= 10; i++) {
+			String title = "제목" + i;
+			String body = "내용" + i;
+
+			writeArticle(title, body);
+		}
 	}
 
 	@RequestMapping("/usr/article/doAdd")
 	@ResponseBody
-	public Article doAdd(String title, String body) {
+	private Article writeArticle(String title, String body) {
 		int id = lastArticleId + 1;
 		Article article = new Article(id, title, body);
 		articles.add(article);
@@ -36,18 +48,6 @@ public class UsrArticleController {
 		return articles;
 	}
 
-	// 테스트데이터 생성.
-	@RequestMapping("/usr/article/getTestArticle")
-	@ResponseBody
-	public List<Article> getArticle() {
-	    
-	    for (int i = 1; i <= 10; i++) {
-	        Article article = new Article(i, "제목" + i, "내용" + i);
-	        articles.add(article);
-	    }
-	    
-	    return articles;
-	}
 	// 입력된 id와 일치하는 article 찾기
 	@RequestMapping("/usr/article/findById")
 	@ResponseBody
@@ -60,7 +60,7 @@ public class UsrArticleController {
         return null;
     }
     //게시물 삭제.
-    @RequestMapping("/usr/article/doDeleteArticle")
+    @RequestMapping("/usr/article/doDelete")
     @ResponseBody
     public  String DoDeleteArticle(int id) {
     	Article article = findById(id);
@@ -74,7 +74,7 @@ public class UsrArticleController {
     }
     
     //게시물 수정.
-    @RequestMapping("/usr/article/doModifyArticle")
+    @RequestMapping("/usr/article/doModify")
     @ResponseBody
     public  String DoModifyArticle(int id, String newTitle, String newBody) {
     	Article article = findById(id);
@@ -85,7 +85,7 @@ public class UsrArticleController {
     		article.setTitle(newTitle);
     		article.setBody(newBody);
     	}
-    	//doModifyArticle?id=1%newTitle=%EC%83%88%EC%A0%9C%EB%AA%A9&newBody=%EC%83%88%EB%82%B4%EC%9A%A9
+    	//doModify?id=1%newTitle=%EC%83%88%EC%A0%9C%EB%AA%A9&newBody=%EC%83%88%EB%82%B4%EC%9A%A9
     	
     	return id + "번 게시물 수정.";
     }
