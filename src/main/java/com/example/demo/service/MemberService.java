@@ -42,4 +42,10 @@ public class MemberService {
 		return memberRepository.getMemberById(id);
 	}
 
+	public int doLogin(String loginId, String loginPw) {
+		
+		memberRepository.doLogin(loginId, loginPw);
+		return 0;
+	}
+
 }

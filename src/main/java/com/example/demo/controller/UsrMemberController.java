@@ -8,39 +8,59 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.demo.service.MemberService;
 import com.example.demo.util.Ut;
 import com.example.demo.vo.Member;
+import com.example.demo.vo.ResultData;
 
 @Controller
 public class UsrMemberController {
-	
+
 	@Autowired
 	private MemberService memberService;
 
 	@RequestMapping("/usr/member/doJoin")
 	@ResponseBody
-	public Object doJoin(String loginId, String loginPw, String name, String nickname, String cellphoneNum,
+	public ResultData doJoin(String loginId, String loginPw, String name, String nickname, String cellphoneNum,
 			String email) {
-		if (Ut.isEmptyOrNull(loginId)) return "아이디를 입력해주세요.";
-		
-		if (Ut.isEmptyOrNull(loginPw)) return "비밀번호를 입력해주세요.";
-		
-		if (Ut.isEmptyOrNull(name)) return "이름을 입력해주세요.";
-		
-		if (Ut.isEmptyOrNull(nickname)) return "닉네임를 입력해주세요.";
-		
-		if (Ut.isEmptyOrNull(cellphoneNum)) return "전화번호를 입력해주세요.";
-		
-		if (Ut.isEmptyOrNull(email)) return "이메일을 입력해주세요.";
-		
-		
+		if (Ut.isEmptyOrNull(loginId))
+			return ResultData.from("F-1", Ut.f("아이디를 입력해주세요."));
+
+		if (Ut.isEmptyOrNull(loginPw))
+			return ResultData.from("F-1", Ut.f("비밀번호를 입력해주세요."));
+
+		if (Ut.isEmptyOrNull(name))
+			return ResultData.from("F-1", Ut.f("이름을 입력해주세요."));
+
+		if (Ut.isEmptyOrNull(nickname))
+			return ResultData.from("F-1", Ut.f("닉네임를 입력해주세요."));
+
+		if (Ut.isEmptyOrNull(cellphoneNum))
+			return ResultData.from("F-1", Ut.f("전화번호를 입력해주세요."));
+
+		if (Ut.isEmptyOrNull(email))
+			return ResultData.from("F-1", Ut.f("이메일을 입력해주세요."));
+
 		int id = memberService.doJoin(loginId, loginPw, name, nickname, cellphoneNum, email);
 		Member member = memberService.getMemberById(id);
 
-		if (id == -1) return Ut.f("%s(은)는 이미 사용중인 아이디입니다.", loginId);
-		if (id == -2) return Ut.f("%s(은)는 이미 사용중인 닉네임입니다.", nickname);
-		if (id == -3) return Ut.f("%s(은)는 이미 사용중인 이메일입니다.", email);
-		if (id == -4) return Ut.f("%s(은)는 이미 사용중인 이메일과 이름입니다.", email, name);
-		if (id == -5) return Ut.f("%s와 %s(은)는 이미 사용중인 전화번호와 이름입니다.", cellphoneNum, name);
-		
+		if (id == -1)
+			return ResultData.from("F-1", Ut.f("%s(은)는 이미 사용중인 아이디입니다.", loginId));
+		if (id == -2)
+			return ResultData.from("F-1", Ut.f("%s(은)는 이미 사용중인 닉네임입니다.", nickname));
+		if (id == -3)
+			return ResultData.from("F-1", Ut.f("%s(은)는 이미 사용중인 이메일입니다.", email));
+		if (id == -4)
+			return ResultData.from("F-1", Ut.f("%s(은)는 이미 사용중인 이메일과 이름입니다.", email, name));
+		if (id == -5)
+			return ResultData.from("F-1", Ut.f("%s와 %s(은)는 이미 사용중인 전화번호와 이름입니다.", cellphoneNum, name));
+
+		return ResultData.from("S-1", Ut.f("회원가입 완료. %s님 환영합니다.", nickname));
+	}
+
+	@RequestMapping("/usr/member/doLogin")
+	@ResponseBody
+	public Object doLogin(String loginId, String loginPw) {
+		int id = memberService.doLogin(loginId, loginPw);
+
+		Member member = memberService.getMemberById(id);
 		return member;
 	}
 

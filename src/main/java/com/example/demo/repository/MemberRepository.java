@@ -32,5 +32,8 @@ public interface MemberRepository {
 	
 	@Select("SELECT * FROM `member` WHERE cellphoneNum = #{cellphoneNum} AND `name` = #{name}")
 	public Member getMemberByNameAndCellphoneNum(String name, String cellphoneNum);
+	
+	
+	public int doLogin(String loginId, String loginPw);
 
 }
