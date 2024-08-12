@@ -16,7 +16,7 @@ public class Ut {
 		
 		if (obj instanceof Map) return ((Map<?, ?>) obj).isEmpty();
 		
-		if (obj.getClass().isArray())return Array.getLength(obj) == 0;
+		if (obj.getClass().isArray()) return Array.getLength(obj) == 0;
 		
 		return false;
 	}

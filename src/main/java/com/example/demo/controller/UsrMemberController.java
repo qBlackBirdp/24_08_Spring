@@ -20,37 +20,27 @@ public class UsrMemberController {
 	@ResponseBody
 	public Object doJoin(String loginId, String loginPw, String name, String nickname, String cellphoneNum,
 			String email) {
-		if (ut.isEmptyOrNull(loginId)) {
-			return "아이디를 입력해주세요.";
-		}
-		if (ut.isEmptyOrNull(loginPw)) {
-			return "비밀번호를 입력해주세요.";
-		}
-		if (ut.isEmptyOrNull(name)) {
-			return "이름을 입력해주세요.";
-		}
-		if (ut.isEmptyOrNull(nickname)) {
-			return "닉네임를 입력해주세요.";
-		}
-		if (ut.isEmptyOrNull(cellphoneNum)) {
-			return "전화번호를 입력해주세요.";
-		}
-		if (ut.isEmptyOrNull(email)) {
-			return "이메일을 입력해주세요.";
-		}
+		if (ut.isEmptyOrNull(loginId)) return "아이디를 입력해주세요.";
+		
+		if (ut.isEmptyOrNull(loginPw)) return "비밀번호를 입력해주세요.";
+		
+		if (ut.isEmptyOrNull(name)) return "이름을 입력해주세요.";
+		
+		if (ut.isEmptyOrNull(nickname)) return "닉네임를 입력해주세요.";
+		
+		if (ut.isEmptyOrNull(cellphoneNum)) return "전화번호를 입력해주세요.";
+		
+		if (ut.isEmptyOrNull(email)) return "이메일을 입력해주세요.";
+		
 		
 		int id = memberService.doJoin(loginId, loginPw, name, nickname, cellphoneNum, email);
 		Member member = memberService.getMemberById(id);
 
-		if (id == -1) {
-			return "이미 사용중인 아이디";
-		}
-		if (id == -2) {
-			return "이미 사용중인 닉네임";
-		}
-		if (id == -3) {
-			return "이미 사용중인 이메일";
-		}
+		if (id == -1) return "이미 사용중인 아이디";
+		if (id == -2) return "이미 사용중인 닉네임";
+		if (id == -3) return "이미 사용중인 이메일";
+		if (id == -4) return "이미 사용중인 이름과 이메일";
+		
 		return member;
 	}
 

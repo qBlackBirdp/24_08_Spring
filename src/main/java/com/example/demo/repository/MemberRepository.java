@@ -26,5 +26,8 @@ public interface MemberRepository {
 	
 	@Select("SELECT * FROM `member` WHERE email = #{email}")
 	public Member getMemberByEmail(String email);
+	
+	@Select("SELECT * FROM `member` WHERE email = #{email} AND `name` = #{name}")
+	public Member getMemberByNameAndEmail(String name, String email);
 
 }
