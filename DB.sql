@@ -28,9 +28,12 @@ CREATE TABLE `member`
     id         int(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     regDate    DATETIME         NOT NULL,
     updateDate DATETIME         NOT NULL,
+    loginId   char(30)        not null,
+    loginPw   char(100)        not null,
     `name`      char(100)        NOT NULL,
-    loginId   char(100)        not null,
-    loginPw   char(100)        not null
+    nickname	char(20)		NOT NULL,
+    cellphoneNum char(20) 		NOT NULL,
+	email 		char(100)		NOT NULL
 );
 
 SELECT *
@@ -53,14 +56,20 @@ SET regDate = NOW(),
     updateDate = NOW(),
     loginId = 'test1',
     loginPw = 'test1',
-    `name` = '김철수';
+    `name` = '김철수',
+    nickname = '김철수 닉네임',
+    cellphoneNum = '01011312242',
+    email = 'abcddd@gmail.com';
 
 INSERT INTO `member`
 SET regDate = NOW(),
     updateDate = NOW(),
     loginId = 'test2',
     loginPw = 'test2',
-    `name` = '홍길동';
+    `name` = '홍길동',
+    nickname = '홍길동 닉네임',
+    cellphoneNum = '01011112222',
+    email = 'abc@gmail.com';
 
 
 
