@@ -20,7 +20,7 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/getArticle")
 	@ResponseBody
-	public ResultData getArticle(int id) {
+	public ResultData<Article> getArticle(int id) {
 
 		Article article = articleService.getArticleById(id);
 
@@ -33,7 +33,7 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/doModify")
 	@ResponseBody
-	public ResultData doModify(int id, String title, String body) {
+	public ResultData<Article> doModify(int id, String title, String body) {
 		System.out.println("id : " + id);
 		System.out.println("title : " + title);
 		System.out.println("body : " + body);
@@ -46,6 +46,7 @@ public class UsrArticleController {
 
 		articleService.modifyArticle(id, title, body);
 
+		article = articleService.getArticleById(id);
 		return ResultData.from("S-2", Ut.f("%d번 게시물 수정되었습니다.", id), article);
 	}
 
@@ -61,7 +62,7 @@ public class UsrArticleController {
 
 		articleService.deleteArticle(id);
 
-		return ResultData.from("S-3", Ut.f("%d번 게시물 삭제되었습니다.", id));
+		return ResultData.from("S-1", Ut.f("%d번 게시물 삭제되었습니다.", id));
 	}
 
 	@RequestMapping("/usr/article/doWrite")
@@ -86,8 +87,9 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/getArticles")
 	@ResponseBody
-	public List<Article> getArticles() {
-		return articleService.getArticles();
+	public ResultData<List<Article>> getArticles() {
+		List<Article> articles = articleService.getArticles();
+		return ResultData.from("S-1", "Article List", articles);
 	}
 
 }
