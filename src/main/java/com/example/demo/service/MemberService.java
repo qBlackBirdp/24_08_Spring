@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.repository.MemberRepository;
-import com.example.demo.vo.Article;
 import com.example.demo.vo.Member;
 
 @Service
