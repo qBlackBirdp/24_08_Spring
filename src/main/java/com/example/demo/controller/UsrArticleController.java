@@ -15,13 +15,58 @@ public class UsrArticleController {
 
 	@Autowired
 	private ArticleService articleService;
-	
-	
-	
+
+	@RequestMapping("/usr/article/getArticle")
+	@ResponseBody
+	public Object getArticle(int id) {
+
+		Article article = articleService.getArticleById(id);
+
+		if (article == null) {
+			return id + "번 글은 없음";
+		}
+
+		return article;
+	}
+
+	@RequestMapping("/usr/article/doModify")
+	@ResponseBody
+	public Object doModify(int id, String title, String body) {
+		System.out.println("id : " + id);
+		System.out.println("title : " + title);
+		System.out.println("body : " + body);
+
+		Article article = articleService.getArticleById(id);
+
+		if (article == null) {
+			return id + "번 글은 없음";
+		}
+
+		articleService.modifyArticle(id, title, body);
+
+		return article;
+	}
+
+	@RequestMapping("/usr/article/doDelete")
+	@ResponseBody
+	public String doDelete(int id) {
+
+		Article article = articleService.getArticleById(id);
+
+		if (article == null) {
+			return id + "번 글은 없음";
+		}
+
+		articleService.deleteArticle(id);
+
+		return id + "번 글이 삭제됨";
+	}
+
 	@RequestMapping("/usr/article/doAdd")
 	@ResponseBody
 	public Article doAdd(String title, String body) {
-		Article article = articleService.writeArticle(title, body);
+		int id = articleService.writeArticle(title, body);
+		Article article = articleService.getArticleById(id);
 		return article;
 	}
 
@@ -29,51 +74,6 @@ public class UsrArticleController {
 	@ResponseBody
 	public List<Article> getArticles() {
 		return articleService.getArticles();
-	}
-
-	
-    //게시물 삭제.
-    @RequestMapping("/usr/article/doDelete")
-    @ResponseBody
-    public  String DoDeleteArticle(int id) {
-    	Article article = articleService.findById(id);
-    	
-    	if (article == null) {
-    		return id + "번 게시물 존재하지 않음.";
-    	} else articleService.articles.remove(article);
-    	
-    	
-    	return id + "번 게시물 삭제.";
-    }
-    
-    //게시물 상세보기.
-    @RequestMapping("/usr/article/getArticle")
-	@ResponseBody
-	public Object getArticle(int id) {
-
-		Article article = articleService.findById(id);
-
-		if (article == null) {
-			return id + "번 글은 없음";
-		}
-
-		return article;
-	}
-    //게시물 수정.
-	@RequestMapping("/usr/article/doModify")
-	@ResponseBody
-	public Object doModify(int id, String title, String body) {
-
-		Article article = articleService.findById(id);
-
-		if (article == null) {
-			return id + "번 글은 없음";
-		} else {
-			article.setTitle(title);
-			article.setBody(body);
-		}
-
-		return article;
 	}
 
 }
