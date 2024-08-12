@@ -49,23 +49,19 @@ public class UsrMemberController {
 		return ResultData.newData(doJoinRd, member);
 	}
 
-//	@RequestMapping("/usr/member/doLogin")
-//	@ResponseBody
-//	public ResultData doLogin(String loginId, String loginPw) {
-//		
-//		if (Ut.isEmptyOrNull(loginId))
-//			return ResultData.from("F-1", Ut.f("아이디를 입력해주세요."));
-//
-//		if (Ut.isEmptyOrNull(loginPw))
-//			return ResultData.from("F-2", Ut.f("비밀번호를 입력해주세요."));
-//		
-//		int id = memberService.doLogin(loginId, loginPw);
-//		Member member = memberService.getMemberById(id);
-//	    if (member == null) {
-//	        return ResultData.from("F-3", "아이디 또는 비밀번호가 일치하지 않습니다.");
-//	    }
-//		
-//		return ResultData.from("S-1", Ut.f("%s님 환영합니다.", memberService.getNickname(id)), member);
-//	}
+	@RequestMapping("/usr/member/doLogin")
+	@ResponseBody
+	public ResultData<Member> doLogin(String loginId, String loginPw) {
+	    if (Ut.isEmptyOrNull(loginId)) {
+	        return ResultData.from("F-1", "아이디를 입력해주세요.");
+	    }
+
+	    if (Ut.isEmptyOrNull(loginPw)) {
+	        return ResultData.from("F-2", "비밀번호를 입력해주세요.");
+	    }
+
+	    return memberService.doLogin(loginId, loginPw);
+	}
+
 
 }

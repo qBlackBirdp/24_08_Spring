@@ -49,17 +49,19 @@ public class MemberService {
 		return memberRepository.getMemberById(id);
 	}
 
-//	public int doLogin(String loginId, String loginPw) {
-//		
-//		if (memberRepository.doLogin(loginId, loginPw) == 0) return 0;
-//		
-//		
-//		return memberRepository.getMemberByLoginId1(loginId);
-//	}
-//	
-//	public String getNickname(int id) {
-//		
-//		return memberRepository.getNickname(id);
-//	}
+	public ResultData<Member> doLogin(String loginId, String loginPw) {
+	    Member member = memberRepository.getMemberByLoginId(loginId);
+	    
+	    if (member == null) {
+	        return ResultData.from("F-3", "아이디 또는 비밀번호가 일치하지 않습니다.");
+	    }
+
+	    if (!member.getLoginPw().equals(loginPw)) {
+	        return ResultData.from("F-3", "아이디 또는 비밀번호가 일치하지 않습니다.");
+	    }
+
+	    return ResultData.from("S-1", Ut.f("%s님 환영합니다.", member.getNickname()), member);
+	}
+
 
 }

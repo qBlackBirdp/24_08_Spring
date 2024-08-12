@@ -46,13 +46,13 @@ public class UsrArticleController {
 
 		articleService.modifyArticle(id, title, body);
 
-		article = articleService.getArticleById(id);
+		article = articleService.getArticleById(id);//수정 후 데이터 새로 가져오기.
 		return ResultData.from("S-2", Ut.f("%d번 게시물 수정되었습니다.", id), article);
 	}
 
 	@RequestMapping("/usr/article/doDelete")
 	@ResponseBody
-	public ResultData doDelete(int id) {
+	public ResultData<Integer> doDelete(int id) {
 
 		Article article = articleService.getArticleById(id);
 

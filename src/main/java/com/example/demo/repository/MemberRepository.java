@@ -33,11 +33,11 @@ public interface MemberRepository {
 	@Select("SELECT * FROM `member` WHERE cellphoneNum = #{cellphoneNum} AND `name` = #{name}")
 	public Member getMemberByNameAndCellphoneNum(String name, String cellphoneNum);
 	
-//	@Select("SELECT COUNT(*) FROM `member` WHERE loginId = #{loginId} AND loginPw = #{loginPw}")
-//	public int doLogin(String loginId, String loginPw);
-//	
-//	@Select("SELECT nickname FROM `member` WHERE id = #{id}")
-//	public String getNickname(int id);
+	@Select("SELECT COUNT(*) FROM `member` WHERE loginId = #{loginId} AND loginPw = #{loginPw}")
+	public int doLogin(String loginId, String loginPw);
+	
+	@Select("SELECT nickname FROM `member` WHERE id = #{id}")
+	public String getNickname(int id);
 //	
 //	@Select("SELECT * FROM `member` WHERE loginId = #{loginId}")
 //	public int getMemberByLoginId1(String loginId);
