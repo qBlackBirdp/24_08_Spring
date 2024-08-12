@@ -4,7 +4,7 @@ import java.lang.reflect.Array;
 import java.util.Map;
 
 public class Ut {
-	public boolean isEmptyOrNull(String str) {
+	public static boolean isEmptyOrNull(String str) {
 		
 		return str == null || str.trim().isEmpty();
 	}
@@ -19,5 +19,9 @@ public class Ut {
 		if (obj.getClass().isArray()) return Array.getLength(obj) == 0;
 		
 		return false;
+	}
+	
+	public static Object f(String format, Object... args) {
+		return String.format(format, args); 
 	}
 }

@@ -30,6 +30,9 @@ public class MemberService {
 
 		existMemeber = memberRepository.getMemberByNameAndEmail(name, email);
 		if (existMemeber != null) return -4;
+		
+		existMemeber = memberRepository.getMemberByNameAndCellphoneNum(name, cellphoneNum);
+		if (existMemeber != null) return -5;
 
 		memberRepository.doJoin(loginId, loginPw, name, nickname, cellphoneNum, email);
 		return memberRepository.getLastInsertId();
