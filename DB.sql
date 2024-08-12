@@ -30,10 +30,13 @@ CREATE TABLE `member`
     updateDate DATETIME         NOT NULL,
     loginId   char(30)        not null,
     loginPw   char(100)        not null,
+    `authLevel` SMALLINT(2) UNSIGNED DEFAULT 3 COMMENT '권한레벨 (3=일반, 7=관리자)',
     `name`      char(100)        NOT NULL,
     nickname	char(20)		NOT NULL,
     cellphoneNum char(20) 		NOT NULL,
-	email 		char(100)		NOT NULL
+	email 		char(100)		NOT NULL,
+    delStatus TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '탈퇴여부 (0=탈퇴 전, 1=탈퇴 후)',
+    delDate DATETIME COMMENT '탈퇴 날짜'
 );
 
 SELECT *
@@ -50,6 +53,20 @@ SET regDate = NOW(),
 
 SELECT *
 FROM article;
+
+-- 회원 테스트데이터.
+# 관리자.
+INSERT INTO `member`
+SET regDate = NOW(),
+    updateDate = NOW(),
+    loginId = 'admin',
+    loginPw = 'admin',
+    `authLevel` = 7,
+    `name` = '관리자',
+    nickname = '관리자',
+    cellphoneNum = '01012341234',
+    email = 'abcddd@gmail.com';
+
 
 INSERT INTO `member`
 SET regDate = NOW(),
