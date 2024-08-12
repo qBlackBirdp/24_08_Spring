@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.repository.MemberRepository;
+import com.example.demo.util.Ut;
 import com.example.demo.vo.Member;
+import com.example.demo.vo.ResultData;
 
 @Service
 public class MemberService {
@@ -16,36 +18,48 @@ public class MemberService {
 		this.memberRepository = memberRepository;
 	}
 
-	public int doJoin(String loginId, String loginPw, String name, String nickname, String cellphoneNum, String email) {
+	public ResultData doJoin(String loginId, String loginPw, String name, String nickname, String cellphoneNum, String email) {
 
-		Member existMemeber = memberRepository.getMemberByLoginId(loginId);
-		if (existMemeber != null) return -1;
+		Member existMember = memberRepository.getMemberByLoginId(loginId);
+		if (existMember != null) {
+			return ResultData.from("F-7", Ut.f("이미 사용중인 아이디(%s)입니다.", loginId));
+		}
 		
-		existMemeber = memberRepository.getMemberByNickname(nickname);
-		if (existMemeber != null) return -2;
+		existMember = memberRepository.getMemberByNickname(nickname);
+		if (existMember != null) return ResultData.from("F-8", Ut.f("이미 사용중인 닉네임(%s)입니다.", nickname));
 		
-		existMemeber = memberRepository.getMemberByEmail(email);
-		if (existMemeber != null) return -3;
+		existMember = memberRepository.getMemberByEmail(email);
+		if (existMember != null) return ResultData.from("F-9", Ut.f("이미 사용중인 이메일(%s)입니다.", email));
 		
-
-		existMemeber = memberRepository.getMemberByNameAndEmail(name, email);
-		if (existMemeber != null) return -4;
+		existMember = memberRepository.getMemberByNameAndEmail(name, email);
+		if (existMember != null) return ResultData.from("F-10", Ut.f("이미 사용중인 이름(%s)과 이메일(%s)입니다.", name, email));
 		
-		existMemeber = memberRepository.getMemberByNameAndCellphoneNum(name, cellphoneNum);
-		if (existMemeber != null) return -5;
-
+		existMember = memberRepository.getMemberByNameAndCellphoneNum(name, cellphoneNum);
+		if (existMember != null) return ResultData.from("F-11", Ut.f("이미 사용중인 이름(%s)과 전화번호(%s)입니다.", name, cellphoneNum));
+		
+		
 		memberRepository.doJoin(loginId, loginPw, name, nickname, cellphoneNum, email);
-		return memberRepository.getLastInsertId();
+		
+		int id = memberRepository.getLastInsertId();
+		
+		return ResultData.from("S-1", "회원가입 성공", id);
 	}
 
 	public Member getMemberById(int id) {
 		return memberRepository.getMemberById(id);
 	}
 
-	public int doLogin(String loginId, String loginPw) {
-		
-		memberRepository.doLogin(loginId, loginPw);
-		return 0;
-	}
+//	public int doLogin(String loginId, String loginPw) {
+//		
+//		if (memberRepository.doLogin(loginId, loginPw) == 0) return 0;
+//		
+//		
+//		return memberRepository.getMemberByLoginId1(loginId);
+//	}
+//	
+//	public String getNickname(int id) {
+//		
+//		return memberRepository.getNickname(id);
+//	}
 
 }

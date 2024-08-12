@@ -24,44 +24,48 @@ public class UsrMemberController {
 			return ResultData.from("F-1", Ut.f("아이디를 입력해주세요."));
 
 		if (Ut.isEmptyOrNull(loginPw))
-			return ResultData.from("F-1", Ut.f("비밀번호를 입력해주세요."));
+			return ResultData.from("F-2", Ut.f("비밀번호를 입력해주세요."));
 
 		if (Ut.isEmptyOrNull(name))
-			return ResultData.from("F-1", Ut.f("이름을 입력해주세요."));
+			return ResultData.from("F-3", Ut.f("이름을 입력해주세요."));
 
 		if (Ut.isEmptyOrNull(nickname))
-			return ResultData.from("F-1", Ut.f("닉네임를 입력해주세요."));
+			return ResultData.from("F-4", Ut.f("닉네임를 입력해주세요."));
 
 		if (Ut.isEmptyOrNull(cellphoneNum))
-			return ResultData.from("F-1", Ut.f("전화번호를 입력해주세요."));
+			return ResultData.from("F-5", Ut.f("전화번호를 입력해주세요."));
 
 		if (Ut.isEmptyOrNull(email))
-			return ResultData.from("F-1", Ut.f("이메일을 입력해주세요."));
+			return ResultData.from("F-6", Ut.f("이메일을 입력해주세요."));
+		
+		ResultData doJoinRd = memberService.doJoin(loginId, loginPw, name, nickname, cellphoneNum, email);
+		
+		if (doJoinRd.isFail()) {
+			return doJoinRd;
+		}
 
-		int id = memberService.doJoin(loginId, loginPw, name, nickname, cellphoneNum, email);
-		Member member = memberService.getMemberById(id);
+		Member member = memberService.getMemberById((int) doJoinRd.getData1());
 
-		if (id == -1)
-			return ResultData.from("F-1", Ut.f("%s(은)는 이미 사용중인 아이디입니다.", loginId));
-		if (id == -2)
-			return ResultData.from("F-1", Ut.f("%s(은)는 이미 사용중인 닉네임입니다.", nickname));
-		if (id == -3)
-			return ResultData.from("F-1", Ut.f("%s(은)는 이미 사용중인 이메일입니다.", email));
-		if (id == -4)
-			return ResultData.from("F-1", Ut.f("%s(은)는 이미 사용중인 이메일과 이름입니다.", email, name));
-		if (id == -5)
-			return ResultData.from("F-1", Ut.f("%s와 %s(은)는 이미 사용중인 전화번호와 이름입니다.", cellphoneNum, name));
-
-		return ResultData.from("S-1", Ut.f("회원가입 완료. %s님 환영합니다.", nickname));
+		return ResultData.newData(doJoinRd, member);
 	}
 
-	@RequestMapping("/usr/member/doLogin")
-	@ResponseBody
-	public Object doLogin(String loginId, String loginPw) {
-		int id = memberService.doLogin(loginId, loginPw);
-
-		Member member = memberService.getMemberById(id);
-		return member;
-	}
+//	@RequestMapping("/usr/member/doLogin")
+//	@ResponseBody
+//	public ResultData doLogin(String loginId, String loginPw) {
+//		
+//		if (Ut.isEmptyOrNull(loginId))
+//			return ResultData.from("F-1", Ut.f("아이디를 입력해주세요."));
+//
+//		if (Ut.isEmptyOrNull(loginPw))
+//			return ResultData.from("F-2", Ut.f("비밀번호를 입력해주세요."));
+//		
+//		int id = memberService.doLogin(loginId, loginPw);
+//		Member member = memberService.getMemberById(id);
+//	    if (member == null) {
+//	        return ResultData.from("F-3", "아이디 또는 비밀번호가 일치하지 않습니다.");
+//	    }
+//		
+//		return ResultData.from("S-1", Ut.f("%s님 환영합니다.", memberService.getNickname(id)), member);
+//	}
 
 }
