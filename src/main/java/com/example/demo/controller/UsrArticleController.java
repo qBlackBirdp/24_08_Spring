@@ -80,8 +80,10 @@ public class UsrArticleController {
 		if (Ut.isEmptyOrNull(body)) {
 			return ResultData.from("F-2", "내용을 입력해주세요");
 		}
+		
+		Integer memberId = (Integer) session.getAttribute("memberId");
 
-		ResultData writeArticleRd = articleService.writeArticle(title, body);
+		ResultData writeArticleRd = articleService.writeArticle(memberId ,title, body);
 
 		int id = (int) writeArticleRd.getData1();
 

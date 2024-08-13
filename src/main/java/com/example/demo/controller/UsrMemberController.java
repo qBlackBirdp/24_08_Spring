@@ -78,9 +78,10 @@ public class UsrMemberController {
         if (loginRd.isFail()) return loginRd;
         
 	    
-	 // 로그인 성공 시 세션에 사용자 정보 저장
-        session = request.getSession();
-        session.setAttribute("loginUser", loginRd.getData1());
+     // 로그인 성공 시 세션에 사용자 정보 저장
+        Member member = loginRd.getData1();
+        session.setAttribute("loginUser", member);
+        session.setAttribute("memberId", member.getId()); // memberId를 세션에 저장
 
 	    return memberService.doLogin(loginId, loginPw);
 	}
