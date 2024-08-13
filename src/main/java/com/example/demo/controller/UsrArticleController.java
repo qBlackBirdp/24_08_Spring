@@ -122,11 +122,10 @@ public class UsrArticleController {
 		return ResultData.from(writeArticleRd.getResultCode(), writeArticleRd.getMsg(), "생성된 게시글", article);
 	}
 
-	@RequestMapping("/usr/article/getArticles")
-	@ResponseBody
+	@RequestMapping("/usr/article/list")
 	public ResultData<List<Article>> getArticles() {
 		List<Article> articles = articleService.getArticles();
-		return ResultData.from("S-1", "Article List", "게시글 목록", articles);
+		return ResultData.from("S-1", "/usr/article/list", "게시글 목록", articles);
 	}
 
 }
