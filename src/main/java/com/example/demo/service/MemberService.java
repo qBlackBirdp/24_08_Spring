@@ -42,7 +42,7 @@ public class MemberService {
 		
 		int id = memberRepository.getLastInsertId();
 		
-		return ResultData.from("S-1", "회원가입 성공", id);
+		return ResultData.from("S-1", "회원가입 성공", "생성된 회원 id", id);
 	}
 
 	public Member getMemberById(int id) {
@@ -57,10 +57,10 @@ public class MemberService {
 	    }
 
 	    if (!member.getLoginPw().equals(loginPw)) {
-	        return ResultData.from("F-3", "아이디 또는 비밀번호가 일치하지 않습니다.");
+	        return ResultData.from("F-3", "비밀번호가 일치하지 않습니다.");
 	    }
 
-	    return ResultData.from("S-1", Ut.f("%s님 환영합니다.", member.getNickname()), member);
+	    return ResultData.from("S-1", Ut.f("%s님 환영합니다", member.getNickname()), "로그인 한 회원", member);
 	}
 
 

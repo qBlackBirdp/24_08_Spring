@@ -10,8 +10,6 @@ import com.example.demo.util.Ut;
 import com.example.demo.vo.Article;
 import com.example.demo.vo.ResultData;
 
-import jakarta.servlet.http.HttpSession;
-
 @Service
 public class ArticleService {
 
@@ -28,7 +26,7 @@ public class ArticleService {
 
 		int id = articleRepository.getLastInsertId();
 
-		return ResultData.from("S-1", Ut.f("%d번 글이 등록되었습니다", id), id);
+		return ResultData.from("S-1", Ut.f("%d번 글이 등록되었습니다", id), "등록 된 게시글의 id", id);
 	}
 
 

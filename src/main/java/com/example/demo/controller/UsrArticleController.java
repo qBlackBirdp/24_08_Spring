@@ -30,7 +30,7 @@ public class UsrArticleController {
 			return ResultData.from("F-1", Ut.f("%d번 게시물은 없습니다.", id));
 		}
 
-		return ResultData.from("S-1", Ut.f("%d번 게시물입니다.", id), article);
+		return ResultData.from("S-1", Ut.f("%d번 게시물입니다.", id), "게시글 1개", article);
 	}
 
 	@RequestMapping("/usr/article/doModify")
@@ -59,7 +59,7 @@ public class UsrArticleController {
 		articleService.modifyArticle(id, title, body);
 
 		article = articleService.getArticleById(id);// 수정 후 데이터 새로 가져오기.
-		return ResultData.from("S-2", Ut.f("%d번 게시물 수정되었습니다.", id), article);
+		return ResultData.from("S-2", Ut.f("%d번 게시물 수정되었습니다.", id), "수정 된 게시글", article);
 	}
 
 	@RequestMapping("/usr/article/doDelete")
@@ -119,14 +119,14 @@ public class UsrArticleController {
 
 		Article article = articleService.getArticleById(id);
 
-		return ResultData.from(writeArticleRd.getResultCode(), writeArticleRd.getMsg(), article);
+		return ResultData.from(writeArticleRd.getResultCode(), writeArticleRd.getMsg(), "생성된 게시글", article);
 	}
 
 	@RequestMapping("/usr/article/getArticles")
 	@ResponseBody
 	public ResultData<List<Article>> getArticles() {
 		List<Article> articles = articleService.getArticles();
-		return ResultData.from("S-1", "Article List", articles);
+		return ResultData.from("S-1", "Article List", "게시글 목록", articles);
 	}
 
 }

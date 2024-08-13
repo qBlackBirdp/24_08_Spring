@@ -53,7 +53,7 @@ public class UsrMemberController {
 
 		Member member = memberService.getMemberById((int) doJoinRd.getData1());
 
-		return ResultData.newData(doJoinRd, member);
+		return ResultData.newData(doJoinRd, "새로 생성된 회원", member);
 	}
 
 	@RequestMapping("/usr/member/doLogin")
