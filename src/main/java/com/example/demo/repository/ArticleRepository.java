@@ -28,4 +28,7 @@ public interface ArticleRepository {
 
 	@Select("SELECT LAST_INSERT_ID();")
 	public int getLastInsertId();
+	
+	@Select("SELECT * FROM article WHERE id = #{id} AND memberId = #{memberId}")
+	public Article isAccessId(int id, int memberId);
 }
