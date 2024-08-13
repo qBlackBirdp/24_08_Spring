@@ -7,10 +7,10 @@
 <link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/resource/common.css">
 <script src="/resource/common.js" defer="defer"></script>
-<title>MAIN</title>
+<title>Article Modify</title>
 </head>
 <body>
-	<h1>MAIN</h1>
+
 
 </body>
 </html>
