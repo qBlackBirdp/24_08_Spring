@@ -12,6 +12,8 @@ import com.example.demo.util.Ut;
 import com.example.demo.vo.Article;
 import com.example.demo.vo.ResultData;
 
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class UsrArticleController {
 
@@ -67,8 +69,11 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/doWrite")
 	@ResponseBody
-	public ResultData doWrite(String title, String body) {
-
+	public ResultData doWrite(HttpSession session, String title, String body) {
+		// 로그인 상태 확인
+        if (session.getAttribute("loginUser") == null) 
+            return ResultData.from("F-0", "로그인 상태가 아닙니다.");
+        
 		if (Ut.isEmptyOrNull(title)) {
 			return ResultData.from("F-1", "제목을 입력해주세요");
 		}

@@ -10,6 +10,9 @@ import com.example.demo.util.Ut;
 import com.example.demo.vo.Member;
 import com.example.demo.vo.ResultData;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class UsrMemberController {
 
@@ -18,8 +21,12 @@ public class UsrMemberController {
 
 	@RequestMapping("/usr/member/doJoin")
 	@ResponseBody
-	public ResultData<Member> doJoin(String loginId, String loginPw, String name, String nickname, String cellphoneNum,
+	public ResultData<Member> doJoin(HttpSession session, String loginId, String loginPw, String name, String nickname, String cellphoneNum,
 			String email) {
+		// 이미 로그인된 상태인지 확인
+        if (session.getAttribute("loginUser") != null) 
+            return ResultData.from("F-0", "이미 로그인된 상태입니다.");
+        
 		if (Ut.isEmptyOrNull(loginId))
 			return ResultData.from("F-1", Ut.f("아이디를 입력해주세요."));
 
@@ -51,17 +58,43 @@ public class UsrMemberController {
 
 	@RequestMapping("/usr/member/doLogin")
 	@ResponseBody
-	public ResultData<Member> doLogin(String loginId, String loginPw) {
-	    if (Ut.isEmptyOrNull(loginId)) {
+	public ResultData<Member> doLogin(HttpServletRequest request, String loginId, String loginPw) {
+		HttpSession session = request.getSession();
+		// 이미 로그인된 상태인지 확인
+        if (session.getAttribute("loginUser") != null) {
+            return ResultData.from("F-0", "이미 로그인된 상태입니다.");
+        }
+        
+	    if (Ut.isEmptyOrNull(loginId)) 
 	        return ResultData.from("F-1", "아이디를 입력해주세요.");
-	    }
+	    
 
-	    if (Ut.isEmptyOrNull(loginPw)) {
+	    if (Ut.isEmptyOrNull(loginPw)) 
 	        return ResultData.from("F-2", "비밀번호를 입력해주세요.");
-	    }
+	    
+	    
+	    ResultData<Member> loginRd = memberService.doLogin(loginId, loginPw);
+
+        if (loginRd.isFail()) return loginRd;
+        
+	    
+	 // 로그인 성공 시 세션에 사용자 정보 저장
+        session = request.getSession();
+        session.setAttribute("loginUser", loginRd.getData1());
 
 	    return memberService.doLogin(loginId, loginPw);
 	}
+	@RequestMapping("/usr/member/doLogout")
+    @ResponseBody
+    public ResultData<Void> doLogout(HttpSession session) {
+		// 로그인 상태 확인
+        if (session.getAttribute("loginUser") == null) 
+            return ResultData.from("F-0", "로그인 상태가 아닙니다.");
+        
+		
+        // 로그아웃 처리
+        session.invalidate();
 
-
+        return ResultData.from("S-1", "로그아웃 되었습니다.");
+    }
 }
