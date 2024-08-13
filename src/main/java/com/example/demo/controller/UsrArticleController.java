@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -53,7 +54,7 @@ public class UsrArticleController {
 		if (article == null) {
 			return ResultData.from("F-1", Ut.f("%d번 게시물은 없습니다.", id));
 		}
-		if (article.getMemberId() != loginedMemberId) 
+		if (article.getMemberId() != loginedMemberId)
 			return ResultData.from("F-B", "게시물에 대한 권한이 없습니다.");
 
 		articleService.modifyArticle(id, title, body);
@@ -64,7 +65,7 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/doDelete")
 	@ResponseBody
-	public ResultData<Integer> doDelete(HttpSession session , int id) {
+	public ResultData<Integer> doDelete(HttpSession session, int id) {
 		// 로그인 상태 확인
 		boolean isLogined = false;
 		int loginedMemberId = 0;
@@ -76,13 +77,13 @@ public class UsrArticleController {
 		if (isLogined == false) {
 			return ResultData.from("F-A", "로그인 하고 써");
 		}
-	
+
 		Article article = articleService.getArticleById(id);
 
 		if (article == null) {
 			return ResultData.from("F-1", Ut.f("%d번 게시물은 없습니다.", id));
 		}
-		if (article.getMemberId() != loginedMemberId) 
+		if (article.getMemberId() != loginedMemberId)
 			return ResultData.from("F-B", "게시물에 대한 권한이 없습니다.");
 
 		articleService.deleteArticle(id);
@@ -123,9 +124,11 @@ public class UsrArticleController {
 	}
 
 	@RequestMapping("/usr/article/list")
-	public ResultData<List<Article>> getArticles() {
+	public String showList(Model model) {
 		List<Article> articles = articleService.getArticles();
-		return ResultData.from("S-1", "/usr/article/list", "게시글 목록", articles);
+
+		model.addAttribute("articles", articles);
+		return "/usr/article/list";
 	}
 
 }
