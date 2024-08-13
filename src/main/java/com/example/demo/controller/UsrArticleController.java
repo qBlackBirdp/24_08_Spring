@@ -53,6 +53,8 @@ public class UsrArticleController {
 		if (article == null) {
 			return ResultData.from("F-1", Ut.f("%d번 게시물은 없습니다.", id));
 		}
+		if (article.getMemberId() != loginedMemberId) 
+			return ResultData.from("F-B", "게시물에 대한 권한이 없습니다.");
 
 		articleService.modifyArticle(id, title, body);
 
@@ -74,14 +76,14 @@ public class UsrArticleController {
 		if (isLogined == false) {
 			return ResultData.from("F-A", "로그인 하고 써");
 		}
-		Article article = articleService.isAccessId(id, loginedMemberId);
-		if (article == null) return ResultData.from("F-B", "게시물에 대한 권한이 없습니다.");
-		
-		article = articleService.getArticleById(id);
+	
+		Article article = articleService.getArticleById(id);
 
 		if (article == null) {
 			return ResultData.from("F-1", Ut.f("%d번 게시물은 없습니다.", id));
 		}
+		if (article.getMemberId() != loginedMemberId) 
+			return ResultData.from("F-B", "게시물에 대한 권한이 없습니다.");
 
 		articleService.deleteArticle(id);
 

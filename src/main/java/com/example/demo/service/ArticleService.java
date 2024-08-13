@@ -49,9 +49,4 @@ public class ArticleService {
 		return articleRepository.getArticles();
 	}
 
-	public Article isAccessId(int id, int memberId) {
-		
-		return articleRepository.isAccessId(id, memberId);
-	}
-
 }
