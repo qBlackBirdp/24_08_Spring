@@ -9,7 +9,37 @@
 <link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/resource/common.css">
 <script src="/resource/common.js" defer="defer"></script>
+<!-- 제이쿼리 -->
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<!-- 폰트어썸 -->
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<!-- 폰트어썸 FREE 아이콘 리스트 : https://fontawesome.com/v5.15/icons?d=gallery&p=2&m=free -->
+
+<!-- 테일윈드 -->
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.1.4/tailwind.min.css">
+<!-- 테일윈드 치트시트 : https://nerdcave.com/tailwind-cheat-sheet -->
 <title>${pageTitle}</title>
 </head>
 <body>
+	<header>
+		<div class="flex h-20 mx-auto items-center text-3xl">
+			<a href="/">LOGO</a>
+			<div class="flex-grow"></div>
+			<ul class="flex">
+				<li><a class="hover:underline" href="/">HOME</a></li>
+				<li><a class="hover:underline" href="../article/list">LIST</a></li>
+				<c:if test=${!rq.isLogined() }>
+					<li><a class="hover:underline" href="../member/login">LOGIN</a></li>
+				</c:if>
+				<c:if test=${rq.isLogined() }>
+					<li><a class="hover:underline" href="../member/login">LOGIN</a></li>
+				</c:if>
+			</ul>
+		</div>
+	</header>
+
 	<h1>${pageTitle}</h1>
