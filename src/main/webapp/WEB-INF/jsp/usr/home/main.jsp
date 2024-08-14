@@ -1,16 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<link rel="stylesheet" type="text/css"
-	href="${pageContext.request.contextPath}/resource/common.css">
-<script src="/resource/common.js" defer="defer"></script>
-<title>MAIN</title>
-</head>
-<body>
-	<h1>MAIN</h1>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
+<c:set var="pageTitle" value="Main"></c:set>
+<%@ include file="../common/head.jspf"%>
+
+
+<hr />
 
 </body>
 </html>

@@ -1,17 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<c:set var="pageTitle" value="게시물 상세보기"></c:set>
+<%@ include file="../common/head.jspf"%>
 
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<link rel="stylesheet" type="text/css"
-	href="${pageContext.request.contextPath}/resource/common.css">
-<script src="/resource/common.js" defer="defer"></script>
-</head>
-<body>
-	<h1>게시물 상세보기</h1>
+	<hr/>
+
 	<div class="article-detail">
 		<div class="detail-item">
 			<span class="label">번호:</span> ${article.id}
@@ -29,7 +23,7 @@
 			<span class="label">내용:</span> ${article.body}
 		</div>
 		<div class="actions">
-			<a href="delete" class="btn">게시물 삭제</a> <a href="modify" class="btn">게시물
+			<a href="../article/doDelete?id=${article.id}" class="btn">게시물 삭제</a> <a href="../article/modify?id=${article.id}" class="btn">게시물
 				수정</a>
 		</div>
 	</div>

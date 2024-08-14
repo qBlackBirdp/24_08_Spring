@@ -23,15 +23,19 @@
 	</insert>
 
 	<select id="getArticles" resultType="Article">
-		SELECT *
-		FROM article
+		SELECT a.*, m.nickname AS extra__writer
+		FROM article a
+		INNER JOIN `member` m
+		ON a.memberId = m.id
 		ORDER BY
-		id DESC
+		a.id DESC
 	</select>
 
 	<select id="getArticleById" resultType="Article">
-		SELECT *
-		FROM article
+		SELECT a.*, m.nickname AS extra__writer
+		FROM article a
+		INNER JOIN `member` m
+		ON a.memberId = m.id
 		WHERE id = #{id}
 	</select>
 </mapper>
