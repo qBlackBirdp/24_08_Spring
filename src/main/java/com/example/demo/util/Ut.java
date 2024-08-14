@@ -17,7 +17,7 @@ public class Ut {
 			replaceUri = "/";
 		}
 
-		String resultMsg = resultCode + "/" + msg;
+		String resultMsg = resultCode + " / " + msg;
 
 		return Ut.f("""
 					<script>
@@ -39,7 +39,7 @@ public class Ut {
 			msg = "";
 		}
 
-		String resultMsg = resultCode + "/" + msg;
+		String resultMsg = resultCode + " / " + msg;
 
 		return Ut.f("""
 					<script>

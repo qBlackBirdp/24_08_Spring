@@ -27,7 +27,7 @@ public class UsrArticleController {
 	@RequestMapping("/usr/article/detail")
 	public String showDetail(HttpServletRequest req, Model model, int id) {
 
-		Rq rq = new Rq(req);
+		Rq rq = (Rq) req.getAttribute("rq");
 
 		Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
 
@@ -40,8 +40,8 @@ public class UsrArticleController {
 	@ResponseBody
 	public ResultData<Article> doModify(HttpServletRequest req, int id, String title, String body) {
 
-		Rq rq = new Rq(req);
-
+		Rq rq = (Rq) req.getAttribute("rq");
+		
 		Article article = articleService.getArticleById(id);
 
 		if (article == null) {
@@ -67,8 +67,8 @@ public class UsrArticleController {
 	@ResponseBody
 	public String doDelete(HttpServletRequest req, int id) {
 
-		Rq rq = new Rq(req);
-
+		Rq rq = (Rq) req.getAttribute("rq");
+		
 		if (rq.isLogined() == false) {
 //			return ResultData.from("F-A", "로그인 하고 써");
 			return Ut.jsReplace("F-A", "로그인 후 이용하세요", "../member/login");
@@ -95,17 +95,11 @@ public class UsrArticleController {
 	}
 	@RequestMapping("/usr/article/doWrite")
 	@ResponseBody
-	public ResultData doWrite(HttpSession session, String title, String body) {
-		// 로그인 상태 확인
-		boolean isLogined = false;
-		int loginedMemberId = 0;
-
-		if (session.getAttribute("loginedMemberId") != null) {
-			isLogined = true;
-			loginedMemberId = (int) session.getAttribute("loginedMemberId");
-		}
-
-		if (isLogined == false) {
+	public ResultData doWrite(HttpServletRequest req, String title, String body) {
+		
+		Rq rq = (Rq) req.getAttribute("rq");
+		
+		if (rq.isLogined() == false) {
 			return ResultData.from("F-A", "로그인 하고 써");
 		}
 
@@ -116,7 +110,7 @@ public class UsrArticleController {
 			return ResultData.from("F-2", "내용을 입력해주세요");
 		}
 
-		ResultData writeArticleRd = articleService.writeArticle(loginedMemberId, title, body);
+		ResultData writeArticleRd = articleService.writeArticle(rq.getLoginedMemberId(), title, body);
 
 		int id = (int) writeArticleRd.getData1();
 
