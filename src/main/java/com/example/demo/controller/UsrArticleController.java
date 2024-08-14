@@ -9,11 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.service.ArticleService;
-import com.example.demo.service.AuthService;
 import com.example.demo.util.Ut;
 import com.example.demo.vo.Article;
 import com.example.demo.vo.ResultData;
+import com.example.demo.vo.Rq;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -21,96 +22,77 @@ public class UsrArticleController {
 
 	@Autowired
 	private ArticleService articleService;
-	
-	@Autowired
-    private AuthService authService;
+
 
 	@RequestMapping("/usr/article/detail")
-	public String showDetail(Model model, HttpSession session, int id) {
-		
+	public String showDetail(HttpServletRequest req, Model model, int id) {
+
+		Rq rq = new Rq(req);
+
+		Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
+
+		model.addAttribute("article", article);
+
+		return "usr/article/detail";
+	}
+
+	@RequestMapping("/usr/article/doModify")
+	@ResponseBody
+	public ResultData<Article> doModify(HttpServletRequest req, int id, String title, String body) {
+
+		Rq rq = new Rq(req);
+
 		Article article = articleService.getArticleById(id);
 
 		if (article == null) {
-			model.addAttribute("errorMessage", "해당 게시물은 없습니다.");
-			return "/usr/article/list";
-//			return ResultData.from("F-1", Ut.f("%d번 게시물은 없습니다.", id));
+			return ResultData.from("F-1", Ut.f("%d번 게시글은 없습니다", id));
 		}
-		model.addAttribute("article", article);
 
-		return "/usr/article/detail";
+		ResultData userCanModifyRd = articleService.userCanModify(rq.getLoginedMemberId(), article);
+
+		if (userCanModifyRd.isFail()) {
+			return userCanModifyRd;
+		}
+
+		if (userCanModifyRd.isSuccess()) {
+			articleService.modifyArticle(id, title, body);
+		}
+
+		article = articleService.getArticleById(id);
+
+		return ResultData.from(userCanModifyRd.getResultCode(), userCanModifyRd.getMsg(), "수정 된 게시글", article);
 	}
-
-	@RequestMapping("/usr/article/modify")
-	public String doModify(Model model, HttpSession session, int id, String title, String body) {
-		// 로그인 상태 확인
-        String loginCheck = authService.checkLogin(session, model);
-        if (loginCheck != null) {
-            return loginCheck;
-        }
-
-        // 게시물 가져오기 및 권한 확인
-        Article article = articleService.getArticleById(id);
-        String permissionCheck = authService.checkArticlePermission(session, model, article);
-        if (permissionCheck != null) {
-            return permissionCheck;
-        }
-
-		articleService.modifyArticle(id, title, body);
-
-		article = articleService.getArticleById(id);// 수정 후 데이터 새로 가져오기.
-		return "/usr/article/modify";
-	}
-
-//	public void isLogined(HttpSession session, Model model) {
-//		// 로그인 상태 확인
-//		boolean isLogined = false;
-//		int loginedMemberId = 0;
-//
-//		if (session.getAttribute("loginedMemberId") != null) {
-//			isLogined = true;
-//			loginedMemberId = (int) session.getAttribute("loginedMemberId");
-//		}
-//		if (isLogined == false) {
-//			model.addAttribute("errorMessage", "로그인먼저 해주세요.");
-//			return "usr/member/login";
-////					return ResultData.from("F-A", "로그인 하고 써");
-//		}
-//		Article article = articleService.getArticleById(id);
-//
-//		if (article == null) {
-//			model.addAttribute("errorMessage", "해당 게시물은 없습니다.");
-//			return "usr/article/list";
-////			return ResultData.from("F-1", Ut.f("%d번 게시물은 없습니다.", id));
-//		}
-//		if (article.getMemberId() != loginedMemberId) {
-//			model.addAttribute("errorMessage", "게시물에 대한 권한이 없습니다.");
-//			return "usr/article/list";
-////			return ResultData.from("F-B", "게시물에 대한 권한이 없습니다.");
-//		}
-//	}
 
 	@RequestMapping("/usr/article/doDelete")
 	@ResponseBody
-	public String doDelete(Model model, HttpSession session, int id) {
-		
-		// 로그인 상태 확인
-        String loginCheck = authService.checkLogin(session, model);
-        if (loginCheck != null) {
-            return loginCheck;
-        }
+	public String doDelete(HttpServletRequest req, int id) {
 
-        // 게시물 가져오기 및 권한 확인
-        Article article = articleService.getArticleById(id);
-        String permissionCheck = authService.checkArticlePermission(session, model, article);
-        if (permissionCheck != null) {
-            return permissionCheck;
-        }
+		Rq rq = new Rq(req);
 
-		articleService.deleteArticle(id);
+		if (rq.isLogined() == false) {
+//			return ResultData.from("F-A", "로그인 하고 써");
+			return Ut.jsReplace("F-A", "로그인 후 이용하세요", "../member/login");
+		}
 
-		return "/usr/article/list";
+		Article article = articleService.getArticleById(id);
+
+		if (article == null) {
+//			return ResultData.from("F-1", Ut.f("%d번 게시글은 없습니다", id), "입력한 id", id);
+			return Ut.jsHistoryBack("F-1", Ut.f("%d번 게시글은 없습니다", id));
+		}
+
+		ResultData userCanDeleteRd = articleService.userCanDelete(rq.getLoginedMemberId(), article);
+
+		if (userCanDeleteRd.isFail()) {
+			return Ut.jsHistoryBack(userCanDeleteRd.getResultCode(), userCanDeleteRd.getMsg());
+		}
+
+		if (userCanDeleteRd.isSuccess()) {
+			articleService.deleteArticle(id);
+		}
+
+		return Ut.jsReplace(userCanDeleteRd.getResultCode(), userCanDeleteRd.getMsg(), "../article/list");
 	}
-
 	@RequestMapping("/usr/article/doWrite")
 	@ResponseBody
 	public ResultData doWrite(HttpSession session, String title, String body) {

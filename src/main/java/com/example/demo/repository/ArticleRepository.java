@@ -28,4 +28,13 @@ public interface ArticleRepository {
 
 	@Select("SELECT LAST_INSERT_ID();")
 	public int getLastInsertId();
+
+	@Select("""
+			SELECT a.* , m.nickname AS extra__writer
+			FROM article AS a
+			INNER JOIN `member` AS m
+			ON a.memberId = m.id
+			WHERE a.id = #{id}
+				""")
+	public Article getForPrintArticle(int id);
 }

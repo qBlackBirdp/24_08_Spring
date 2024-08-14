@@ -32,10 +32,8 @@
 	</select>
 
 	<select id="getArticleById" resultType="Article">
-		SELECT a.*, m.nickname AS extra__writer
+		SELECT a.*
 		FROM article a
-		INNER JOIN `member` m
-		ON a.memberId = m.id
 		WHERE id = #{id}
 	</select>
 </mapper>

@@ -57,37 +57,26 @@ public class UsrMemberController {
 		return ResultData.newData(doJoinRd, "새로 생성된 회원", member);
 	}
 
-	@RequestMapping("/usr/member/login")
+	@RequestMapping("/usr/member/doLogin")
 	@ResponseBody
-	public String doLogin(Model model, HttpServletRequest request, String loginId, String loginPw) {
+	public ResultData<Member> doLogin(Model model, HttpServletRequest request, String loginId, String loginPw) {
 		HttpSession session = request.getSession();
 		// 이미 로그인된 상태인지 확인
         if (session.getAttribute("loginUser") != null) {
-        	model.addAttribute("errorMessage", "이미 로그인된 상태입니다.");
-            return "usr/member/login";
-//            return ResultData.from("F-0", "이미 로그인된 상태입니다.");
+            return ResultData.from("F-0", "이미 로그인된 상태입니다.");
         }
         
-	    if (Ut.isEmptyOrNull(loginId)) {
-	    	model.addAttribute("errorMessage", "아이디를 입력해주세요.");
-	        return "usr/member/login";
-//	        return ResultData.from("F-1", "아이디를 입력해주세요.");
-	    }
+	    if (Ut.isEmptyOrNull(loginId)) 
+	        return ResultData.from("F-1", "아이디를 입력해주세요.");
 	    
 
-	    if (Ut.isEmptyOrNull(loginPw)) {
-	    	model.addAttribute("errorMessage", "비밀번호를 입력해주세요.");
-	        return "usr/member/login";
-//	        return ResultData.from("F-2", "비밀번호를 입력해주세요.");
-	    }
+	    if (Ut.isEmptyOrNull(loginPw)) 
+	        return ResultData.from("F-2", "비밀번호를 입력해주세요.");
+	    
 	    
 	    ResultData<Member> loginRd = memberService.doLogin(loginId, loginPw);
 
-        if (loginRd.isFail()) {
-        	model.addAttribute("errorMessage", "아이디와 비밀번호가 일치하지 않습니다.");
-            return "usr/member/login";
-//        	return loginRd;
-        }
+        if (loginRd.isFail()) return loginRd;
         
 	    
      // 로그인 성공 시 세션에 사용자 정보 저장
@@ -95,7 +84,7 @@ public class UsrMemberController {
         session.setAttribute("loginUser", member);
         session.setAttribute("loginedMemberId", member.getId()); // memberId를 세션에 저장
 
-	    return "redirect:/usr/home/main";
+	    return memberService.doLogin(loginId, loginPw);
 	}
 	@RequestMapping("/usr/member/doLogout")
     @ResponseBody

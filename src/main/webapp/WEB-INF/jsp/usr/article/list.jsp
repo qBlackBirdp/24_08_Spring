@@ -12,7 +12,7 @@
                 <th>ID</th>
                 <th>Registration Date</th>
                 <th>Title</th>
-                <th>Member ID</th>
+                <th>Writer</th>
             </tr>
         </thead>
         <tbody>
@@ -21,7 +21,7 @@
                     <td>${article.id}</td>
                     <td>${article.regDate.substring(0, 10)}</td>
                     <td><a href="detail?id=${article.id}">${article.title}</a></td>
-                    <td>${article.memberId}</td>
+                    <td>${article.extra__writer}</td>
                 </tr>
             </c:forEach>
         </tbody>

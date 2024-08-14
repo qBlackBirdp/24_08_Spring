@@ -46,5 +46,39 @@ public class ArticleService {
 	public List<Article> getArticles() {
 		return articleRepository.getArticles();
 	}
+	
+	public Article getForPrintArticle(int loginedMemberId, int id) {
 
+		Article article = articleRepository.getForPrintArticle(id);
+
+		controlForPrintData(loginedMemberId, article);
+
+		return article;
+	}
+
+
+	private void controlForPrintData(int loginedMemberId, Article article) {
+		if (article == null) {
+			return;
+		}
+		ResultData userCanModifyRd = userCanModify(loginedMemberId, article);
+		article.setUserCanModify(userCanModifyRd.isSuccess());
+
+		ResultData userCanDeleteRd = userCanDelete(loginedMemberId, article);
+		article.setUserCanDelete(userCanModifyRd.isSuccess());
+	}
+
+	public ResultData userCanDelete(int loginedMemberId, Article article) {
+		if (article.getMemberId() != loginedMemberId) {
+			return ResultData.from("F-2", Ut.f("%d번 게시글에 대한 삭제 권한이 없습니다", article.getId()));
+		}
+		return ResultData.from("S-1", Ut.f("%d번 게시글을 삭제했습니다", article.getId()));
+	}
+
+	public ResultData userCanModify(int loginedMemberId, Article article) {
+		if (article.getMemberId() != loginedMemberId) {
+			return ResultData.from("F-2", Ut.f("%d번 게시글에 대한 수정 권한이 없습니다", article.getId()));
+		}
+		return ResultData.from("S-1", Ut.f("%d번 게시글을 수정했습니다", article.getId()), "수정된 게시글", article);
+	}
 }
