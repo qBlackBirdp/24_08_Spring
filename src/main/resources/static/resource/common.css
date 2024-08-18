@@ -27,6 +27,32 @@ a:hover {
     text-decoration: underline;
 }
 
+/* 버튼 기본 스타일 */
+.btn {
+    padding: 8px 16px;
+    background-color: #2a9d8f;
+    color: #ffffff;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #219080;
+}
+
+.btn:active {
+    background-color: #1b7d6d;
+}
+
+/* 버튼 위치 조정 */
+.article-table + .actions {
+    text-align: right;
+    margin-top: 10px;
+}
+
 /* 로그인 폼 스타일 */
 form {
     width: 300px; /* 크기 줄이기 */
@@ -196,8 +222,8 @@ form input[type="submit"]:hover {
 .article-table tr:hover {
     background-color: #333;
 }
-/* 게시물 수정 스타일 */
-.modify-article-section {
+/* 게시물 수정,작성 스타일 */
+.article-section {
     width: 60%; 
     max-width: 1000px; 
     margin: 0 auto;
@@ -208,12 +234,12 @@ form input[type="submit"]:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-.modify-article-form {
+.article-form {
     width: 80%;
 }
 
-.modify-article-section input[type="text"],
-.modify-article-section textarea {
+.article-section input[type="text"],
+.article-section textarea {
     width: 100%; 
     padding: 12px;
     background-color: #333;
@@ -224,11 +250,11 @@ form input[type="submit"]:hover {
     box-sizing: border-box;
 }
 
-.modify-article-section .form-group {
+.article-section .form-group {
     margin-bottom: 20px;
 }
 
-.modify-article-section input[type="submit"] {
+.article-section input[type="submit"] {
     width: 100%; 
     padding: 12px;
     background-color: #2a9d8f;
@@ -239,7 +265,7 @@ form input[type="submit"]:hover {
     font-size: 16px;
 }
 
-.modify-article-section input[type="submit"]:hover {
+.article-section input[type="submit"]:hover {
     background-color: #219080;
 }
 

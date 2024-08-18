@@ -2,12 +2,12 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<c:set var="pageTitle" value="게시물 수정하기"></c:set>
+<c:set var="pageTitle" value="게시물 작성하기"></c:set>
 <%@ include file="../common/head.jspf"%>
 
 <section class="article-section">
 
-	<form action="doModify?id=${article.id}" method="post" class="article-form">
+	<form action="doWrite?id=${article.id}" method="post" class="article-form">
 		<input type="hidden" name="id" value="${article.id}" />
 
 		<div class="form-group">
@@ -21,12 +21,12 @@
 		</div>
 
 		<div class="form-group">
-			<input type="submit" value="수정하기" />
+			<input type="submit" value="작성하기" />
 		</div>
 	</form>
 
 	<div class="actions">
-		<a href="detail?id=${article.id}" class="btn">취소</a>
+		<a href="list" class="btn">취소</a>
 	</div>
 </section>
 
