@@ -47,15 +47,25 @@ a:hover {
     background-color: #1b7d6d;
 }
 
-/* 버튼 위치 조정 */
+/* .actions 클래스 통합 */
+.actions {
+    text-align: right;
+    margin-top: 20px;
+}
+
+.actions .btn {
+    margin-left: 10px;
+}
+
 .article-table + .actions {
     text-align: right;
     margin-top: 10px;
 }
 
-/* 로그인 폼 스타일 */
+/* 공통 폼 스타일 */
 form {
-    width: 300px; /* 크기 줄이기 */
+    width: 100%;
+    max-width: 400px;
     margin: 0 auto;
     padding: 20px;
     background-color: #1e1e1e;
@@ -63,48 +73,44 @@ form {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-table.login-table {
+.form-table {
     width: 100%;
 }
 
-.login-table th {
+.form-table th {
     text-align: left;
     padding-bottom: 10px;
     color: #c7c7c7;
+    width: 30%;
 }
 
-.login-table td {
+.form-table td {
     padding-bottom: 10px;
 }
 
-input[type="text"], input[type="password"] {
-    width: calc(100% - 10px); /* 크기 조정 */
-    padding: 8px; /* 패딩 조정 */
+input[type="text"], input[type="password"], input[type="email"], textarea {
+    width: calc(100% - 12px);
+    padding: 10px;
     border: 1px solid #333;
     border-radius: 3px;
     background-color: #2c2c2c;
     color: #e0e0e0;
+    font-size: 16px;
 }
 
 input[type="submit"] {
-    width: calc(100% - 10px); /* 크기 동일하게 조정 */
-    padding: 8px; /* 패딩 조정 */
+    width: 100%;
+    padding: 12px;
     background-color: #2a9d8f;
     color: #fff;
-    border: none;
-    border-radius: 3px;
     cursor: pointer;
+    border: none;
+    border-radius: 4px;
     font-size: 16px;
 }
 
 input[type="submit"]:hover {
     background-color: #219080;
-}
-
-/* 섹션 스타일 */
-section {
-    margin-top: 20px;
-    padding: 20px;
 }
 
 /* 폼 내부의 추가적인 스타일 */
@@ -117,23 +123,13 @@ form label {
 }
 
 form input {
-    padding: 8px; /* 패딩 조정 */
+    padding: 8px;
     width: 100%;
     box-sizing: border-box;
     border: 1px solid #444;
     background-color: #1e1e1e;
     color: #e0e0e0;
     border-radius: 4px;
-}
-
-form input[type="submit"] {
-    background-color: #2a9d8f;
-    color: #ffffff;
-    cursor: pointer;
-}
-
-form input[type="submit"]:hover {
-    background-color: #219080;
 }
 
 /* 상세 페이지 스타일 */
@@ -157,42 +153,6 @@ form input[type="submit"]:hover {
     font-weight: bold;
     color: #c7c7c7;
     margin-right: 10px;
-}
-
-.actions {
-    text-align: right;
-    margin-top: 20px;
-}
-
-.actions .btn {
-    margin-left: 10px;
-    padding: 8px 12px;
-    background-color: #2a9d8f;
-    color: #fff;
-    border-radius: 4px;
-    text-decoration: none;
-}
-
-.actions .btn:hover {
-    background-color: #219080;
-}
-
-.navigation {
-    margin-top: 20px;
-    text-align: center;
-}
-
-.navigation .btn {
-    padding: 8px 12px;
-    background-color: #264653;
-    color: #fff;
-    border-radius: 4px;
-    text-decoration: none;
-    margin: 0 5px;
-}
-
-.navigation .btn:hover {
-    background-color: #1b3a4b;
 }
 
 /* 게시물 테이블 스타일 */
@@ -222,7 +182,8 @@ form input[type="submit"]:hover {
 .article-table tr:hover {
     background-color: #333;
 }
-/* 게시물 수정,작성 스타일 */
+
+/* 게시물 수정, 작성 스타일 */
 .article-section {
     width: 60%; 
     max-width: 1000px; 
@@ -252,37 +213,4 @@ form input[type="submit"]:hover {
 
 .article-section .form-group {
     margin-bottom: 20px;
-}
-
-.article-section input[type="submit"] {
-    width: 100%; 
-    padding: 12px;
-    background-color: #2a9d8f;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.article-section input[type="submit"]:hover {
-    background-color: #219080;
-}
-
-.actions {
-    text-align: right;
-    margin-top: 20px;
-}
-
-.actions .btn {
-    padding: 10px 20px;
-    background-color: #264653;
-    color: #fff;
-    border-radius: 4px;
-    text-decoration: none;
-    margin: 0 5px;
-}
-
-.actions .btn:hover {
-    background-color: #1b3a4b;
 }

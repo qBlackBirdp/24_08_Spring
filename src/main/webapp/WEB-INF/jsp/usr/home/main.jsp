@@ -8,5 +8,15 @@
 
 <hr />
 
+<section class="recent-articles">
+    <h2>Recent Articles</h2>
+    <ul>
+        <c:forEach var="article" items="${recentArticles}">
+            <li><a href="detail?id=${article.id}">${article.title}</a> - ${article.regDate.substring(0, 10)}</li>
+        </c:forEach>
+    </ul>
+</section>
+
+
 </body>
 </html>

@@ -20,40 +20,45 @@ public class UsrMemberController {
 
 	@Autowired
 	private MemberService memberService;
+	
+	@RequestMapping("/usr/member/join")
+	public String showJoin() {
+		return "/usr/member/join";
+	}
 
 	@RequestMapping("/usr/member/doJoin")
 	@ResponseBody
-	public ResultData<Member> doJoin(HttpServletRequest req, String loginId, String loginPw,
+	public String doJoin(HttpServletRequest req, String loginId, String loginPw,
 			String name, String nickname, String cellphoneNum, String email) {
 		Rq rq = (Rq) req.getAttribute("rq");
 		
 		if (Ut.isEmptyOrNull(loginId))
-			return ResultData.from("F-1", Ut.f("아이디를 입력해주세요."));
+			return Ut.jsHistoryBack("F-1", Ut.f("아이디를 입력해주세요."));
 
 		if (Ut.isEmptyOrNull(loginPw))
-			return ResultData.from("F-2", Ut.f("비밀번호를 입력해주세요."));
+			return Ut.jsHistoryBack("F-2", Ut.f("비밀번호를 입력해주세요."));
 
 		if (Ut.isEmptyOrNull(name))
-			return ResultData.from("F-3", Ut.f("이름을 입력해주세요."));
+			return Ut.jsHistoryBack("F-3", Ut.f("이름을 입력해주세요."));
 
 		if (Ut.isEmptyOrNull(nickname))
-			return ResultData.from("F-4", Ut.f("닉네임를 입력해주세요."));
+			return Ut.jsHistoryBack("F-4", Ut.f("닉네임를 입력해주세요."));
 
 		if (Ut.isEmptyOrNull(cellphoneNum))
-			return ResultData.from("F-5", Ut.f("전화번호를 입력해주세요."));
+			return Ut.jsHistoryBack("F-5", Ut.f("전화번호를 입력해주세요."));
 
 		if (Ut.isEmptyOrNull(email))
-			return ResultData.from("F-6", Ut.f("이메일을 입력해주세요."));
+			return Ut.jsHistoryBack("F-6", Ut.f("이메일을 입력해주세요."));
 
 		ResultData doJoinRd = memberService.doJoin(loginId, loginPw, name, nickname, cellphoneNum, email);
 
 		if (doJoinRd.isFail()) {
-			return doJoinRd;
+			return Ut.jsHistoryBack(doJoinRd.getResultCode(), doJoinRd.getMsg());
 		}
 
 		Member member = memberService.getMemberById((int) doJoinRd.getData1());
 
-		return ResultData.newData(doJoinRd, "새로 생성된 회원", member);
+		return Ut.jsReplace("S-1", "회원가입이 완료되었습니다.", "/usr/member/login");
 	}
 
 	@RequestMapping("/usr/member/login")
