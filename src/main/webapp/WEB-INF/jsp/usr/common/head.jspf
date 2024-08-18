@@ -29,14 +29,15 @@
 		<div class="flex h-20 mx-auto items-center text-3xl">
 			<a href="/">LOGO</a>
 			<div class="flex-grow"></div>
-			<ul class="flex">
+			<ul class="flex space-x-6">
 				<li><a class="hover:underline" href="/">HOME</a></li>
 				<li><a class="hover:underline" href="../article/list">LIST</a></li>
-				<c:if test=${!rq.isLogined() }>
-					<li><a class="hover:underline" href="../member/login">LOGIN</a></li>
+				<c:if test="${!rq.isLogined()}">
+					<li><a class="mr-4" href="../member/login">LOGIN</a></li>
 				</c:if>
-				<c:if test=${rq.isLogined() }>
-					<li><a class="hover:underline" href="../member/login">LOGIN</a></li>
+				<c:if test="${rq.isLogined()}">
+					<li><a onclick="if(confirm('로그아웃 하시겠습니까?') == false) return false;" class="mr-4"
+						href="../member/doLogout">LOGOUT</a></li>
 				</c:if>
 			</ul>
 		</div>

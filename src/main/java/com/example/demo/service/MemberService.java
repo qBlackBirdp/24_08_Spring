@@ -48,6 +48,10 @@ public class MemberService {
 	public Member getMemberById(int id) {
 		return memberRepository.getMemberById(id);
 	}
+	
+	public Member getMemberByLoginId(String loginId) {
+		return memberRepository.getMemberByLoginId(loginId);
+	}
 
 	public ResultData<Member> doLogin(String loginId, String loginPw) {
 	    Member member = memberRepository.getMemberByLoginId(loginId);
@@ -62,6 +66,5 @@ public class MemberService {
 
 	    return ResultData.from("S-1", Ut.f("%s님 환영합니다", member.getNickname()), "로그인 한 회원", member);
 	}
-
 
 }
