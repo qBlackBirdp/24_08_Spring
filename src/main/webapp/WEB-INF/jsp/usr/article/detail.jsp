@@ -14,6 +14,9 @@
 		<span class="label">날짜:</span> ${article.regDate}
 	</div>
 	<div class="detail-item">
+		<span class="label">수정 날짜:</span> ${article.updateDate}
+	</div>
+	<div class="detail-item">
 		<span class="label">작성자:</span> ${article.extra__writer}
 	</div>
 	<div class="detail-item">

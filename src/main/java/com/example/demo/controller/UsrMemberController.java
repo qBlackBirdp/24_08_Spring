@@ -33,7 +33,7 @@ public class UsrMemberController {
 	@ResponseBody
 	public String doJoin(HttpServletRequest req, String loginId, String loginPw,
 			String name, String nickname, String cellphoneNum, String email) {
-		Rq rq = (Rq) req.getAttribute("rq");
+		rq = (Rq) req.getAttribute("rq");
 		
 		if (Ut.isEmptyOrNull(loginId))
 			return Ut.jsHistoryBack("F-1", Ut.f("아이디를 입력해주세요."));
@@ -73,7 +73,7 @@ public class UsrMemberController {
 	@ResponseBody
 	public String doLogin(HttpServletRequest req, String loginId, String loginPw) {
 
-		Rq rq = (Rq) req.getAttribute("rq");
+		rq = (Rq) req.getAttribute("rq");
 
 		Member member = memberService.getMemberByLoginId(loginId);
 
