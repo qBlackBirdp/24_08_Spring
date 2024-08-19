@@ -9,13 +9,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.service.ArticleService;
+import com.example.demo.service.BoardService;
 import com.example.demo.util.Ut;
 import com.example.demo.vo.Article;
+import com.example.demo.vo.Board;
 import com.example.demo.vo.ResultData;
 import com.example.demo.vo.Rq;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class UsrArticleController {
@@ -25,6 +26,9 @@ public class UsrArticleController {
 	
 	@Autowired
 	private Rq rq;
+	
+	@Autowired
+	private BoardService boardService;
 
 
 	@RequestMapping("/usr/article/detail")
@@ -53,7 +57,7 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/doModify")
 	@ResponseBody
-	public String doModify(HttpServletRequest req, Model model, int id, String title, String body) {
+	public String doModify(HttpServletRequest req, int id, String title, String body) {
 
 		Rq rq = (Rq) req.getAttribute("rq");
 		
@@ -75,7 +79,7 @@ public class UsrArticleController {
 
 		article = articleService.getArticleById(id);
 
-		return Ut.jsReplace("S-1", Ut.f("%d번 게시글이 수정되었습니다.", id), "/usr/article/detail?id=" + id);
+		return Ut.jsReplace(userCanModifyRd.getResultCode(), userCanModifyRd.getMsg(), "/usr/article/detail?id=" + id);
 	}
 
 	@RequestMapping("/usr/article/doDelete")
@@ -104,7 +108,7 @@ public class UsrArticleController {
 		return Ut.jsReplace(userCanDeleteRd.getResultCode(), userCanDeleteRd.getMsg(), "../article/list");
 	}
 	@RequestMapping("/usr/article/write")
-	public String showWrite(Model model) {
+	public String showWrite(HttpServletRequest req) {
 
 	    return "usr/article/write";
 	}
@@ -133,11 +137,18 @@ public class UsrArticleController {
 	}
 
 	@RequestMapping("/usr/article/list")
-	public String showList(Model model) {
+	public String showList(Model model, int boardId) {
+
+		Board board = boardService.getBoardById(boardId);
+
 		List<Article> articles = articleService.getArticles();
 
+//		System.out.println(board);
+
 		model.addAttribute("articles", articles);
-		return "/usr/article/list";
+		model.addAttribute("board", board);
+
+		return "usr/article/list";
 	}
 
 }

@@ -61,7 +61,7 @@ public class UsrMemberController {
 
 		Member member = memberService.getMemberById((int) doJoinRd.getData1());
 
-		return Ut.jsReplace("S-1", "회원가입이 완료되었습니다.", "/usr/member/login");
+		return Ut.jsReplace(doJoinRd.getResultCode(), doJoinRd.getMsg(), "/usr/member/login");
 	}
 
 	@RequestMapping("/usr/member/login")

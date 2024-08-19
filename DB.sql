@@ -10,6 +10,7 @@ USE `24_08_Spring`;
 
 SHOW TABLES;
 
+#게시물 테이블 생성
 CREATE TABLE article(
                         id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
                         regDate DATETIME NOT NULL,
@@ -20,9 +21,12 @@ CREATE TABLE article(
 
 ALTER TABLE article ADD COLUMN memberId INT UNSIGNED NOT NULL AFTER updateDate;
 
+ALTER TABLE article ADD COLUMN boardId INT(10) UNSIGNED NOT NULL AFTER memberId;
+
 SELECT *
 FROM article;
 
+# 회원 테이블 생성
 CREATE TABLE `member`
 (
     id         int(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -46,8 +50,50 @@ FROM `member`;
 -- From `member`
 -- where id = 7;
 
+#게시판 테이블 생성
+CREATE TABLE board(
+                        id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                        regDate DATETIME NOT NULL,
+                        updateDate DATETIME NOT NULL,
+                        `code` CHAR(50) NOT NULL Unique comment '공지사항, QnA 등',
+                        `name` CHAR(50) NOT NULL Unique comment '',
+						delStatus TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '탈퇴여부 (0=탈퇴 전, 1=탈퇴 후)',
+						delDate DATETIME COMMENT '탈퇴 날짜'
+);
+
 
 ##############################   TEST   ####################################
+-- 게시판 테스트 데이터.	
+INSERT INTO board
+SET regDate = NOW(),
+updateDate = NOW(),
+`code` = 'notice',
+`name` = '공지사항';
+
+INSERT INTO board
+SET regDate = NOW(),
+updateDate = NOW(),
+`code` = 'free',
+`name` = '자유';
+
+INSERT INTO board
+SET regDate = NOW(),
+updateDate = NOW(),
+`code` = 'QnA',
+`name` = '질의응답';
+
+UPDATE article
+SET boardId = 1
+WHERE id IN (1,2, 3, 4);
+
+UPDATE article
+SET boardId = 2
+WHERE id in (5, 6);
+
+UPDATE article
+SET boardId = 3
+WHERE id = 7;
+
 INSERT INTO article
 SET regDate = NOW(),
     updateDate = NOW(),

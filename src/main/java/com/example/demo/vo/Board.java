@@ -7,17 +7,13 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Member {
+public class Board {
 
 	private int id;
 	private String regDate;
 	private String updateDate;
-	private String loginId;
-	private String loginPw;
+	private String code;
 	private String name;
-	private String nickname;
-	private String cellphoneNum;
-	private String email;
 	private boolean delStatus;
 	private String delDate;
 }

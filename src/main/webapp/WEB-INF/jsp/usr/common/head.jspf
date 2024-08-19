@@ -22,6 +22,12 @@
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.1.4/tailwind.min.css">
 <!-- 테일윈드 치트시트 : https://nerdcave.com/tailwind-cheat-sheet -->
+
+<!-- daisyUI -->
+<!-- <link rel="stylesheet" 
+	href="https://cdnjs.cloudflare.com/ajax/libs/daisyui/4.12.10/full.css" 
+	integrity="sha512-LdqdBlgYG8yMfGjgzGJQeZP0FlzGrFrDXCm+smCPJ5JLY4N7Cqz01a8n6XN4TCIgjTKslR0qa0sDVBwmDJVFeQ==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+
 <title>${pageTitle}</title>
 </head>
 <body>
