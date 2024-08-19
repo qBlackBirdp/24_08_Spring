@@ -33,7 +33,7 @@
 <body>
 	<header>
 		<div class="flex h-20 mx-auto items-center text-3xl">
-			<a href="/">LOGO</a>
+			<a href="/" class="ml-2">LOGO</a>
 			<div class="flex-grow"></div>
 			<ul class="flex space-x-6">
 				<li><a class="" href="/">HOME</a></li>

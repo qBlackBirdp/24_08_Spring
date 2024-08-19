@@ -4,7 +4,7 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.repository.ArticleRepository">
 	<update id="modifyArticle">
-		UPDATE article 
+		UPDATE article
 		<set>
 			<if test="title != null and title != ''">title = #{title},</if>
 			<if test="body != null and body != ''">`body` = #{body},</if>
@@ -16,7 +16,8 @@
 	<insert id="writeArticle">
 		INSERT INTO article
 		SET regDate = NOW(),
-		updateDate = NOW(),
+		updateDate =
+		NOW(),
 		title = #{title},
 		`body` = #{body},
 		memberId = #{memberId},
@@ -36,5 +37,18 @@
 		SELECT a.*
 		FROM article a
 		WHERE id = #{id}
+	</select>
+	<!-- 페이지네이션 -->
+	<select id="getArticlesByPage" resultType="Article">
+		SELECT *
+		FROM article
+		WHERE boardId = #{boardId}
+		ORDER BY id DESC
+		LIMIT #{limit} OFFSET #{offset}
+	</select>
+	<select id="getTotalArticlesCount" resultType="int">
+		SELECT COUNT(*)
+		FROM article
+		WHERE boardId = #{boardId}
 	</select>
 </mapper>

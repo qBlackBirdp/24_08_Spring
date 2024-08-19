@@ -278,3 +278,32 @@ li:hover .sub-menu {
     border-color: #e0e0e0 transparent transparent transparent;
     pointer-events: none;
 }
+/* 페이지네이션 */
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.pagination a {
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 0 5px;
+    background-color: #2a9d8f;
+    color: #ffffff;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.pagination a:hover {
+    background-color: #219080;
+}
+
+.pagination span {
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 0 5px;
+    background-color: #333;
+    color: #ffffff;
+    border-radius: 4px;
+}
+

@@ -48,4 +48,11 @@ public interface ArticleRepository {
 			a.id DESC
 				""")
 	public List<Article> getArticlesByBorderId(int boardId);
+
+	//페이지네이션
+	public List<Article> getArticlesByPage(int boardId, int offset, int limit);
+
+	public int getTotalArticlesCount(int boardId);
+	
+	
 }

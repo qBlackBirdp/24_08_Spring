@@ -85,4 +85,13 @@ public class ArticleService {
 	public List<Article> getBIdArticles(int boardId) {
 		return articleRepository.getArticlesByBorderId(boardId);	
 		}
+	
+	//페이지네이션
+	public List<Article> getArticlesByPage(int boardId, int offset, int limit) {
+	    return articleRepository.getArticlesByPage(boardId, offset, limit);
+	}
+
+	public int getTotalArticlesCount(int boardId) {
+	    return articleRepository.getTotalArticlesCount(boardId);
+	}
 }

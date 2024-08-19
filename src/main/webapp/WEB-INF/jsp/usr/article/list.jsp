@@ -41,6 +41,27 @@
 </c:if>
 
 
+<div class="pagination" style="text-align: center; margin-top: 20px;">
+    <c:if test="${currentPage > 1}">
+        <a href="?boardId=${boardId}&page=${currentPage - 1}" class="btn">Previous</a>
+    </c:if>
+
+    <c:forEach var="i" begin="1" end="${totalPages}">
+        <c:choose>
+            <c:when test="${i == currentPage}">
+                <span class="btn active">${i}</span>
+            </c:when>
+            <c:otherwise>
+                <a href="?boardId=${boardId}&page=${i}" class="btn">${i}</a>
+            </c:otherwise>
+        </c:choose>
+    </c:forEach>
+
+    <c:if test="${currentPage < totalPages}">
+        <a href="?boardId=${boardId}&page=${currentPage + 1}" class="btn">Next</a>
+    </c:if>
+</div>
+
 
 </body>
 </html>

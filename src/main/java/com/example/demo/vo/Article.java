@@ -21,4 +21,6 @@ public class Article {
 	
 	private boolean UserCanModify;
 	private boolean UserCanDelete;
+	
+	private int page;
 }

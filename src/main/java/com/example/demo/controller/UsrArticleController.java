@@ -142,18 +142,28 @@ public class UsrArticleController {
 	}
 
 	@RequestMapping("/usr/article/list")
-	public String showList(Model model, @RequestParam(defaultValue = "1") int boardId) {
-
-		Board board = boardService.getBoardById(boardId);
-
-//		List<Article> articles = articleService.getArticles();
+	public String showList(Model model, Integer page, @RequestParam(defaultValue = "1") int boardId) {
 		
-		List<Article> bIdarticles = articleService.getBIdArticles(boardId);
-		
-		model.addAttribute("articles", bIdarticles);
+		if (page == null) {
+	        page = 1; // 기본값 설정
+	    }
+		Board board = boardService.getBoardById(boardId);		
 		model.addAttribute("board", board);
+		
+		int itemsPerPage = 10;
+	    int totalItems = articleService.getTotalArticlesCount(boardId);
+	    int totalPages = (int) Math.ceil((double) totalItems / itemsPerPage);
+	    int offset = (page - 1) * itemsPerPage;
 
-		return "usr/article/list";
+	    List<Article> articles = articleService.getArticlesByPage(boardId, offset, itemsPerPage);
+	    
+
+	    model.addAttribute("articles", articles);
+	    model.addAttribute("currentPage", page);
+	    model.addAttribute("totalPages", totalPages);
+	    model.addAttribute("boardId", boardId);
+
+	    return "usr/article/list";
 	}
 
 }
