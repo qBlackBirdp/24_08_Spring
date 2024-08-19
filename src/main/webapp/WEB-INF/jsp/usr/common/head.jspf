@@ -37,14 +37,20 @@
 			<div class="flex-grow"></div>
 			<ul class="flex space-x-6">
 				<li><a class="" href="/">HOME</a></li>
-				<li><a class="" href="../article/list">LIST</a></li>
+				<li><a class="" href="../article/list">LIST</a>
+					<ul class="sub-menu">
+						<li><a href="../article/list?boardId=1">Notice</a></li>
+						<li><a href="../article/list?boardId=2">Free</a></li>
+						<li><a href="../article/list?boardId=3">QnA</a></li>
+					</ul></li>
 				<c:if test="${!rq.isLogined()}">
 					<li><a class="" href="../member/login">LOGIN</a></li>
 					<li><a class="mr-4" href="../member/join">JOIN</a></li>
 				</c:if>
 				<c:if test="${rq.isLogined()}">
-					<li><a onclick="if(confirm('로그아웃 하시겠습니까?') == false) return false;" class="mr-4"
-						href="../member/doLogout">LOGOUT</a></li>
+					<li><a
+						onclick="if(confirm('로그아웃 하시겠습니까?') == false) return false;"
+						class="mr-4" href="../member/doLogout">LOGOUT</a></li>
 				</c:if>
 			</ul>
 		</div>

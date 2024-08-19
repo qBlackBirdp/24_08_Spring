@@ -115,7 +115,7 @@ public class UsrArticleController {
 	
 	@RequestMapping("/usr/article/doWrite")
 	@ResponseBody
-	public String doWrite(HttpServletRequest req, String title, String body) {
+	public String doWrite(HttpServletRequest req, String title, String body, String boardId) {
 		
 		Rq rq = (Rq) req.getAttribute("rq");
 		
@@ -125,6 +125,9 @@ public class UsrArticleController {
 		}
 		if (Ut.isEmptyOrNull(body)) {
 			return Ut.jsHistoryBack("F-2", "내용을 입력해주세요");
+		}
+		if (Ut.isEmptyOrNull(boardId)) {
+			return Ut.jsHistoryBack("F-3", "게시판 선택해주세요.");
 		}
 
 		ResultData writeArticleRd = articleService.writeArticle(rq.getLoginedMemberId(), title, body);
@@ -141,11 +144,11 @@ public class UsrArticleController {
 
 		Board board = boardService.getBoardById(boardId);
 
-		List<Article> articles = articleService.getArticles();
-
-//		System.out.println(board);
-
-		model.addAttribute("articles", articles);
+//		List<Article> articles = articleService.getArticles();
+		
+		List<Article> bIdarticles = articleService.getBIdArticles(boardId);
+		
+		model.addAttribute("articles", bIdarticles);
 		model.addAttribute("board", board);
 
 		return "usr/article/list";

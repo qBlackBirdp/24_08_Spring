@@ -214,3 +214,35 @@ form input {
 .article-section .form-group {
     margin-bottom: 20px;
 }
+
+/* List Menu */
+
+/* 기본 설정은 이전과 동일 */
+
+.sub-menu {
+    display: none;
+    position: absolute;
+    background-color: #1e1e1e;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+li:hover .sub-menu {
+    display: block;
+}
+
+.sub-menu li {
+    margin-bottom: 5px;
+}
+
+.sub-menu li a {
+    color: #82aaff;
+    text-decoration: none;
+}
+
+.sub-menu li a:hover {
+    text-decoration: underline;
+    color: #ffffff;
+}
+

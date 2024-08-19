@@ -37,4 +37,15 @@ public interface ArticleRepository {
 			WHERE a.id = #{id}
 				""")
 	public Article getForPrintArticle(int id);
+	
+	@Select("""
+			SELECT a.*, m.nickname AS extra__writer
+			FROM article a
+			INNER JOIN `member` m
+			ON a.memberId = m.id
+			WHERE a.boardId = #{boardId}
+			ORDER BY
+			a.id DESC
+				""")
+	public List<Article> getArticlesByBorderId(int boardId);
 }

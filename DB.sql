@@ -152,3 +152,4 @@ SET a.updateDate = NOW(),
     a.title = '2222',
     a.`body`= '2222'
 WHERE a.id = 1 AND m.id = 1;
+
