@@ -21,6 +21,9 @@ public class UsrMemberController {
 	@Autowired
 	private MemberService memberService;
 	
+	@Autowired
+	private Rq rq;
+	
 	@RequestMapping("/usr/member/join")
 	public String showJoin() {
 		return "/usr/member/join";
@@ -62,7 +65,7 @@ public class UsrMemberController {
 	}
 
 	@RequestMapping("/usr/member/login")
-	public String showLogin() {
+	public String showLogin(HttpServletRequest req) {
 		return "/usr/member/login";
 	}
 
@@ -90,8 +93,6 @@ public class UsrMemberController {
 	@RequestMapping("/usr/member/doLogout")
 	@ResponseBody
 	public String doLogout(HttpServletRequest req) {
-
-		Rq rq = (Rq) req.getAttribute("rq");
 
 		// 로그아웃 처리
 		rq.logout();

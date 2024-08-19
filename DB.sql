@@ -42,6 +42,10 @@ CREATE TABLE `member`
 SELECT *
 FROM `member`;
 
+-- DELETE
+-- From `member`
+-- where id = 7;
+
 
 ##############################   TEST   ####################################
 INSERT INTO article

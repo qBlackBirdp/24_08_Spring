@@ -33,7 +33,7 @@
 </div>
 
 <div class="navigation">
-	<a href="../home/main" class="btn">메인 페이지로</a> <a href="list"
+	<a href="../home/main" class="btn ml-2 mr-2">메인 페이지로</a> <a href="list"
 		class="btn">리스트로 돌아가기</a>
 </div>
 

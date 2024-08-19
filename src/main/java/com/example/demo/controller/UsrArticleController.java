@@ -22,6 +22,9 @@ public class UsrArticleController {
 
 	@Autowired
 	private ArticleService articleService;
+	
+	@Autowired
+	private Rq rq;
 
 
 	@RequestMapping("/usr/article/detail")
