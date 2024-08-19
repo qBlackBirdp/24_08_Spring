@@ -25,11 +25,17 @@
 				<td>${article.extra__writer}</td>
 			</tr>
 		</c:forEach>
+		<c:if test="${empty articles}">
+			<tr>
+				<td colspan="4" style="text-align: center;">게시글이 없습니다</td>
+			</tr>
+		</c:if>
 	</tbody>
 </table>
 
 <c:if test="${rq.isLogined()}">
-	<div style="text-align: right; margin-bottom: 10px; margin-right: 20px;">
+	<div
+		style="text-align: right; margin-bottom: 10px; margin-right: 20px;">
 		<a href="write" class="btn">게시물 작성하기</a>
 	</div>
 </c:if>

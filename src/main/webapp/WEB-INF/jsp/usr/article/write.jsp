@@ -9,6 +9,16 @@
 
 	<form action="doWrite?id=${article.id}" method="post" class="article-form">
 		<input type="hidden" name="id" value="${article.id}" />
+		
+		<div class="form-group">
+			<label for="boardId">게시판 선택</label>
+			<select id="boardId" name="boardId" class="form-select" required>
+				<option value="">게시판을 선택하세요</option>
+				<option value="1">Notice</option>
+				<option value="2">Free</option>
+				<option value="3">QnA</option>
+			</select>
+		</div>
 
 		<div class="form-group">
 			<label for="title">제목</label>

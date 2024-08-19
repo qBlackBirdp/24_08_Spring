@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.service.ArticleService;
@@ -129,8 +130,9 @@ public class UsrArticleController {
 		if (Ut.isEmptyOrNull(boardId)) {
 			return Ut.jsHistoryBack("F-3", "게시판 선택해주세요.");
 		}
-
-		ResultData writeArticleRd = articleService.writeArticle(rq.getLoginedMemberId(), title, body);
+		
+		int boardIdInt = Integer.parseInt(boardId);
+		ResultData writeArticleRd = articleService.writeArticle(rq.getLoginedMemberId(), title, body, boardIdInt);
 
 		int id = (int) writeArticleRd.getData1();
 
@@ -140,7 +142,7 @@ public class UsrArticleController {
 	}
 
 	@RequestMapping("/usr/article/list")
-	public String showList(Model model, int boardId) {
+	public String showList(Model model, @RequestParam(defaultValue = "1") int boardId) {
 
 		Board board = boardService.getBoardById(boardId);
 
