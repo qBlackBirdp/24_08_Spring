@@ -72,7 +72,5 @@ public interface ArticleRepository {
 //		    LIMIT #{limit} OFFSET #{offset}
 //		""")
 	public List<Article> getArticlesByPageAndSearch(int boardId, String searchField, String searchKeyword, int limit,
-			int offset);
-	
-	
+			int offset);	
 }

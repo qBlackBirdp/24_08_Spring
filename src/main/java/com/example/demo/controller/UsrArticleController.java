@@ -141,42 +141,44 @@ public class UsrArticleController {
 	}
 
 	@RequestMapping("/usr/article/list")
-	public String showList(Model model, Integer page, @RequestParam(defaultValue = "1") int boardId,
-			@RequestParam(value = "searchField", required = false) String searchField,
-			@RequestParam(value = "searchKeyword", required = false) String searchKeyword) {
-
-		if (page == null) {
-			page = 1; // 기본값 설정
-		}
-		Board board = boardService.getBoardById(boardId);
-		model.addAttribute("board", board);
-
-		int itemsPerPage = 10;
-		int totalItems = articleService.getTotalArticlesCount(boardId);
-		int totalPages = (int) Math.ceil((double) totalItems / itemsPerPage);
-		int offset = (page - 1) * itemsPerPage;
-
-		List<Article> articles = articleService.getArticlesByPage(boardId, offset, itemsPerPage);
-
-		// 검색어와 검색 조건이 있는 경우 필터링된 게시물 가져오기
-		if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
-			totalItems = articleService.getTotalArticlesCountBySearch(boardId, searchField, searchKeyword);
-			articles = articleService.getArticlesByPageAndSearch(boardId, searchField, searchKeyword,
-					(page - 1) * itemsPerPage, itemsPerPage);
-		} else {
-			totalItems = articleService.getTotalArticlesCount(boardId);
-			articles = articleService.getArticlesByPage(boardId, (page - 1) * itemsPerPage, itemsPerPage);
-		}
-
-		model.addAttribute("articles", articles);
-		model.addAttribute("currentPage", page);
-		model.addAttribute("totalPages", totalPages);
-		model.addAttribute("boardId", boardId);
+	public String showList(Model model, HttpServletRequest req,
+	                       @RequestParam(defaultValue = "1") Integer page, 
+	                       @RequestParam(defaultValue = "1") int boardId,
+	                       @RequestParam(value = "searchField", required = false) String searchField,
+	                       @RequestParam(value = "searchKeyword", required = false) String searchKeyword) {
 		
-		model.addAttribute("searchField", searchField);
+		Rq rq = (Rq) req.getAttribute("rq");
+		
+		if (page == null) {
+		    page = 1; // 기본값 설정
+		}
+
+	    Board board = boardService.getBoardById(boardId);
+	    model.addAttribute("board", board);
+
+	    int itemsPerPage = 10;
+	    int offset = (page - 1) * itemsPerPage;
+	    List<Article> articles;
+	    int totalItems;
+	    int totalPages;
+
+	    if (searchField != null && searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+	        totalItems = articleService.getTotalArticlesCountBySearch(boardId, searchField, searchKeyword);
+	        articles = articleService.getArticlesByPageAndSearch(boardId, searchField, searchKeyword, itemsPerPage, offset);
+	    } else {
+	        totalItems = articleService.getTotalArticlesCount(boardId);
+	        articles = articleService.getArticlesByPage(boardId, offset, itemsPerPage);
+	    }
+
+	    totalPages = (int) Math.ceil((double) totalItems / itemsPerPage);
+
+	    model.addAttribute("articles", articles);
+	    model.addAttribute("currentPage", page);
+	    model.addAttribute("totalPages", totalPages);
+	    model.addAttribute("boardId", boardId);
+	    model.addAttribute("searchField", searchField);
 	    model.addAttribute("searchKeyword", searchKeyword);
 
-		return "usr/article/list";
+	    return "usr/article/list";
 	}
-
 }

@@ -97,7 +97,8 @@ public class ArticleService {
 		return articleRepository.getTotalArticlesCountBySearch(boardId, searchField, searchKeyword);
 	}
 
-	public List<Article> getArticlesByPageAndSearch(int boardId, String searchField, String searchKeyword, int offset, int limit) {
-	    return articleRepository.getArticlesByPageAndSearch(boardId, searchField, searchKeyword, offset, limit);
+	public List<Article> getArticlesByPageAndSearch(int boardId, String searchField, String searchKeyword, int itemsPerPage, int offset) {
+	    return articleRepository.getArticlesByPageAndSearch(boardId, searchField, searchKeyword, itemsPerPage, offset);
 	}
+
 }
