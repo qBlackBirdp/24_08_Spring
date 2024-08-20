@@ -54,5 +54,25 @@ public interface ArticleRepository {
 
 	public int getTotalArticlesCount(int boardId);
 	
+	//검색기능 
+//	@Select("""
+//		    SELECT COUNT(*)
+//		    FROM article
+//		    WHERE boardId = #{boardId}
+//		    AND ${searchField} LIKE CONCAT('%', #{searchKeyword}, '%')
+//		""")
+	public int getTotalArticlesCountBySearch(int boardId, String searchField, String searchKeyword);
+	
+//	@Select("""
+//		    SELECT *
+//		    FROM article
+//		    WHERE boardId = #{boardId}
+//		    AND ${searchField} LIKE CONCAT('%', #{searchKeyword}, '%')
+//		    ORDER BY id DESC
+//		    LIMIT #{limit} OFFSET #{offset}
+//		""")
+	public List<Article> getArticlesByPageAndSearch(int boardId, String searchField, String searchKeyword, int limit,
+			int offset);
+	
 	
 }

@@ -24,13 +24,12 @@ public class UsrArticleController {
 
 	@Autowired
 	private ArticleService articleService;
-	
+
 	@Autowired
 	private Rq rq;
-	
+
 	@Autowired
 	private BoardService boardService;
-
 
 	@RequestMapping("/usr/article/detail")
 	public String showDetail(HttpServletRequest req, Model model, int id) {
@@ -43,17 +42,17 @@ public class UsrArticleController {
 
 		return "usr/article/detail";
 	}
-	
+
 	@RequestMapping("/usr/article/modify")
 	public String showModify(Model model, int id) {
-	    Article article = articleService.getArticleById(id);
+		Article article = articleService.getArticleById(id);
 
-	    if (article == null) {
-	        return "redirect:/usr/article/list";
-	    }
+		if (article == null) {
+			return "redirect:/usr/article/list";
+		}
 
-	    model.addAttribute("article", article);
-	    return "usr/article/modify";
+		model.addAttribute("article", article);
+		return "usr/article/modify";
 	}
 
 	@RequestMapping("/usr/article/doModify")
@@ -61,7 +60,7 @@ public class UsrArticleController {
 	public String doModify(HttpServletRequest req, int id, String title, String body) {
 
 		Rq rq = (Rq) req.getAttribute("rq");
-		
+
 		Article article = articleService.getArticleById(id);
 
 		if (article == null) {
@@ -108,19 +107,19 @@ public class UsrArticleController {
 
 		return Ut.jsReplace(userCanDeleteRd.getResultCode(), userCanDeleteRd.getMsg(), "../article/list");
 	}
+
 	@RequestMapping("/usr/article/write")
 	public String showWrite(HttpServletRequest req) {
 
-	    return "usr/article/write";
+		return "usr/article/write";
 	}
-	
+
 	@RequestMapping("/usr/article/doWrite")
 	@ResponseBody
 	public String doWrite(HttpServletRequest req, String title, String body, String boardId) {
-		
+
 		Rq rq = (Rq) req.getAttribute("rq");
-		
-		
+
 		if (Ut.isEmptyOrNull(title)) {
 			return Ut.jsHistoryBack("F-1", "제목을 입력해주세요");
 		}
@@ -130,7 +129,7 @@ public class UsrArticleController {
 		if (Ut.isEmptyOrNull(boardId)) {
 			return Ut.jsHistoryBack("F-3", "게시판 선택해주세요.");
 		}
-		
+
 		int boardIdInt = Integer.parseInt(boardId);
 		ResultData writeArticleRd = articleService.writeArticle(rq.getLoginedMemberId(), title, body, boardIdInt);
 
@@ -138,32 +137,46 @@ public class UsrArticleController {
 
 		Article article = articleService.getArticleById(id);
 
-		return Ut.jsReplace(writeArticleRd.getResultCode(), writeArticleRd.getMsg(),"/usr/article/detail?id=" + id);
+		return Ut.jsReplace(writeArticleRd.getResultCode(), writeArticleRd.getMsg(), "/usr/article/detail?id=" + id);
 	}
 
 	@RequestMapping("/usr/article/list")
-	public String showList(Model model, Integer page, @RequestParam(defaultValue = "1") int boardId) {
-		
+	public String showList(Model model, Integer page, @RequestParam(defaultValue = "1") int boardId,
+			@RequestParam(value = "searchField", required = false) String searchField,
+			@RequestParam(value = "searchKeyword", required = false) String searchKeyword) {
+
 		if (page == null) {
-	        page = 1; // 기본값 설정
-	    }
-		Board board = boardService.getBoardById(boardId);		
+			page = 1; // 기본값 설정
+		}
+		Board board = boardService.getBoardById(boardId);
 		model.addAttribute("board", board);
-		
+
 		int itemsPerPage = 10;
-	    int totalItems = articleService.getTotalArticlesCount(boardId);
-	    int totalPages = (int) Math.ceil((double) totalItems / itemsPerPage);
-	    int offset = (page - 1) * itemsPerPage;
+		int totalItems = articleService.getTotalArticlesCount(boardId);
+		int totalPages = (int) Math.ceil((double) totalItems / itemsPerPage);
+		int offset = (page - 1) * itemsPerPage;
 
-	    List<Article> articles = articleService.getArticlesByPage(boardId, offset, itemsPerPage);
-	    
+		List<Article> articles = articleService.getArticlesByPage(boardId, offset, itemsPerPage);
 
-	    model.addAttribute("articles", articles);
-	    model.addAttribute("currentPage", page);
-	    model.addAttribute("totalPages", totalPages);
-	    model.addAttribute("boardId", boardId);
+		// 검색어와 검색 조건이 있는 경우 필터링된 게시물 가져오기
+		if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+			totalItems = articleService.getTotalArticlesCountBySearch(boardId, searchField, searchKeyword);
+			articles = articleService.getArticlesByPageAndSearch(boardId, searchField, searchKeyword,
+					(page - 1) * itemsPerPage, itemsPerPage);
+		} else {
+			totalItems = articleService.getTotalArticlesCount(boardId);
+			articles = articleService.getArticlesByPage(boardId, (page - 1) * itemsPerPage, itemsPerPage);
+		}
 
-	    return "usr/article/list";
+		model.addAttribute("articles", articles);
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", totalPages);
+		model.addAttribute("boardId", boardId);
+		
+		model.addAttribute("searchField", searchField);
+	    model.addAttribute("searchKeyword", searchKeyword);
+
+		return "usr/article/list";
 	}
 
 }

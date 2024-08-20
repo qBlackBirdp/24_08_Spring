@@ -99,7 +99,29 @@ SET regDate = NOW(),
     updateDate = NOW(),
     title = CONCAT('제목', SUBSTRING(RAND() * 1000 FROM 1 FOR 2)),
     `body` = CONCAT('내용', SUBSTRING(RAND() * 1000 FROM 1 FOR 2)),
-    memberId = 2;
+    memberId = 3,
+    boardId = 3;
+    
+INSERT INTO article
+SET regDate = NOW(),
+    updateDate = NOW(),
+    title = CONCAT('제목', SUBSTRING(RAND() * 1000 FROM 1 FOR 2)),
+    `body` = CONCAT('내용', SUBSTRING(RAND() * 1000 FROM 1 FOR 2)),
+    memberId = 4,
+    boardId = 3;
+    
+## 게시글 테스트 데이터 대량 생성
+INSERT INTO article
+(
+    regDate, updateDate, memberId, boardId, title, `body`
+)
+select now(), now(), floor(RAND() * 2) + 2, FLOOR(RAND() * 3) + 1, CONCAT('제목__', RAND()), CONCAT('내용__', RAND())
+from article;
+
+
+select floor(RAND() * 2) + 2;
+
+SELECT FLOOR(RAND() * 3) + 1;
 
 SELECT *
 FROM article;
@@ -152,4 +174,9 @@ SET a.updateDate = NOW(),
     a.title = '2222',
     a.`body`= '2222'
 WHERE a.id = 1 AND m.id = 1;
+
+SELECT a.*, m.nickname AS extra__writer
+FROM article a
+INNER JOIN `member` m ON a.memberId = m.id
+WHERE a.boardId = 1;
 

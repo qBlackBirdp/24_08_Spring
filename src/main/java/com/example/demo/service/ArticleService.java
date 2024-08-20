@@ -20,15 +20,14 @@ public class ArticleService {
 		this.articleRepository = articleRepository;
 	}
 
-	public ResultData writeArticle(int memberId, String title, String body, int boardId) { 
-				
+	public ResultData writeArticle(int memberId, String title, String body, int boardId) {
+
 		articleRepository.writeArticle(memberId, title, body, boardId);
 
 		int id = articleRepository.getLastInsertId();
 
 		return ResultData.from("S-1", Ut.f("%d번 글이 등록되었습니다", id), "등록 된 게시글의 id", id);
 	}
-
 
 	public void deleteArticle(int id) {
 		articleRepository.deleteArticle(id);
@@ -46,7 +45,7 @@ public class ArticleService {
 	public List<Article> getArticles() {
 		return articleRepository.getArticles();
 	}
-	
+
 	public Article getForPrintArticle(int loginedMemberId, int id) {
 
 		Article article = articleRepository.getForPrintArticle(id);
@@ -55,7 +54,6 @@ public class ArticleService {
 
 		return article;
 	}
-
 
 	private void controlForPrintData(int loginedMemberId, Article article) {
 		if (article == null) {
@@ -83,15 +81,23 @@ public class ArticleService {
 	}
 
 	public List<Article> getBIdArticles(int boardId) {
-		return articleRepository.getArticlesByBorderId(boardId);	
-		}
-	
-	//페이지네이션
+		return articleRepository.getArticlesByBorderId(boardId);
+	}
+
+	// 페이지네이션
 	public List<Article> getArticlesByPage(int boardId, int offset, int limit) {
-	    return articleRepository.getArticlesByPage(boardId, offset, limit);
+		return articleRepository.getArticlesByPage(boardId, offset, limit);
 	}
 
 	public int getTotalArticlesCount(int boardId) {
-	    return articleRepository.getTotalArticlesCount(boardId);
+		return articleRepository.getTotalArticlesCount(boardId);
+	}
+	//검색기능.
+	public int getTotalArticlesCountBySearch(int boardId, String searchField, String searchKeyword) {
+		return articleRepository.getTotalArticlesCountBySearch(boardId, searchField, searchKeyword);
+	}
+
+	public List<Article> getArticlesByPageAndSearch(int boardId, String searchField, String searchKeyword, int offset, int limit) {
+	    return articleRepository.getArticlesByPageAndSearch(boardId, searchField, searchKeyword, offset, limit);
 	}
 }
