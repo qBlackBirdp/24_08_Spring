@@ -92,31 +92,11 @@
 
 </c:if>
 
-
-<div class="pagination flex justify-center mt-3">
-    <c:set var="baseUri" value="?boardId=${boardId}" />
-    <c:if test="${searchField != null && !searchField.isEmpty() && searchKeyword != null && !searchKeyword.isEmpty()}">
-        <c:set var="baseUri" value="${baseUri}&searchField=${searchField}&searchKeyword=${searchKeyword}" />
-    </c:if>
-
-    <!-- 이전 버튼 -->
-    <c:if test="${currentPage > 1}">
-        <a class="btn btn-sm" href="${baseUri}&page=${currentPage - 1}">Previous</a>
-    </c:if>
-
-    <!-- 다음 버튼 -->
-    <c:if test="${currentPage < totalPages}">
-        <a class="btn btn-sm" href="${baseUri}&page=${currentPage + 1}">Next</a>
-    </c:if>
-</div>
-
-
-
-
 <div class="search-bar">
 	<form action="/usr/article/list" method="GET">
 		<div class="search-container">
-			<select name="searchField" class="search-field-select" data-value="${param.searchField}">
+			<select name="searchField" class="search-field-select"
+				data-value="${param.searchField}">
 				<option value="title">제목</option>
 				<option value="body">내용</option>
 				<option value="extra__writer">작성자</option>

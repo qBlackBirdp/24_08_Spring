@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.example.demo.vo.Article;
 
@@ -72,5 +73,12 @@ public interface ArticleRepository {
 //		    LIMIT #{limit} OFFSET #{offset}
 //		""")
 	public List<Article> getArticlesByPageAndSearch(int boardId, String searchField, String searchKeyword, int limit,
-			int offset);	
+			int offset);
+	
+	@Update("""
+			UPDATE article
+			SET hitCount = hitCount + 1
+			WHERE id = #{id}
+			""")
+	public int increaseHitCount(int id);	
 }

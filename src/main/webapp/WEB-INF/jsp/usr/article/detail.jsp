@@ -20,6 +20,9 @@
 		<span class="label">번호:</span> ${article.id}
 	</div>
 	<div class="detail-item">
+		<span class="label">조회수:</span> ${article.hitCount}
+	</div>
+	<div class="detail-item">
 		<span class="label">날짜:</span> ${article.regDate}
 	</div>
 	<div class="detail-item">

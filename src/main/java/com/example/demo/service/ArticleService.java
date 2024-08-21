@@ -92,13 +92,24 @@ public class ArticleService {
 	public int getTotalArticlesCount(int boardId) {
 		return articleRepository.getTotalArticlesCount(boardId);
 	}
-	//검색기능.
+
+	// 검색기능.
 	public int getTotalArticlesCountBySearch(int boardId, String searchField, String searchKeyword) {
 		return articleRepository.getTotalArticlesCountBySearch(boardId, searchField, searchKeyword);
 	}
 
-	public List<Article> getArticlesByPageAndSearch(int boardId, String searchField, String searchKeyword, int itemsPerPage, int offset) {
-	    return articleRepository.getArticlesByPageAndSearch(boardId, searchField, searchKeyword, itemsPerPage, offset);
+	public List<Article> getArticlesByPageAndSearch(int boardId, String searchField, String searchKeyword,
+			int itemsPerPage, int offset) {
+		return articleRepository.getArticlesByPageAndSearch(boardId, searchField, searchKeyword, itemsPerPage, offset);
+	}
+
+	public ResultData increaseHitCount(int id) {
+		int affectRows = articleRepository.increaseHitCount(id);
+
+		if (affectRows == 0)
+			return ResultData.from("F-1", "해당 게시글은 존재하지 않습니다.", "id", id);
+
+		return ResultData.from("S-1", "해당 게시글의 조회수가 증가합니다.", "id", id);
 	}
 
 }
