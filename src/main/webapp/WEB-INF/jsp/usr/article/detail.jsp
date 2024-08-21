@@ -51,37 +51,7 @@
         });
     });
 </script>
-<style>
-    #likeBtn {
-        padding: 10px 20px;
-        border: none;
-        background-color: #008CBA;
-        color: white;
-        font-size: 16px;
-        cursor: pointer;
-        border-radius: 5px;
-    }
 
-    #likeBtn.liked {
-        background-color: #e74c3c;
-    }
-
-    .detail-item {
-        margin-bottom: 10px;
-    }
-
-    .label {
-        font-weight: bold;
-    }
-
-    .actions {
-        margin-top: 20px;
-    }
-
-    .navigation {
-        margin-top: 30px;
-    }
-</style>
 
 <hr />
 
