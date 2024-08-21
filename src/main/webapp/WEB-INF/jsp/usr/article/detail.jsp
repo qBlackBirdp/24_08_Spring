@@ -11,6 +11,13 @@
 
 <script>
 	function ArticleDetail__doIncreaseHitCount() {
+		//로컬스토리지, 조회수 조작 방지.
+		const localStorageKey = 'article__' + params.id + '__alreadyOnView';
+		if (localStorage.getItem(localStorageKey)) {
+			return;
+		}
+		localStorage.setItem(localStorageKey, true);
+
 		$.get('../article/doIncreaseHitCountRd', {
 			id : params.id,
 			ajaxMode : 'Y'
@@ -21,35 +28,52 @@
 		}, 'json')
 	}
 	$(function() {
-				ArticleDetail__doIncreaseHitCount();
+		ArticleDetail__doIncreaseHitCount();
 		//setTimeout(ArticleDetail__doIncreaseHitCount, 2000);
 	})
 </script>
 <script>
-    $(document).ready(function() {
-        const likeBtn = $('#likeBtn');
+	function initializeLikeButton() {
+		const likeBtn = $('#likeBtn');
 
-        // 페이지 로드 시, 로컬 스토리지에서 좋아요 상태를 가져와 설정
-        if (localStorage.getItem('liked_${article.id}') === 'true') {
-            likeBtn.addClass('liked');
-            likeBtn.text('❤️ Liked');
-        }
+		let likeCount = parseInt(localStorage
+				.getItem('likeCount_' + article.id)
+				|| '0'); // 로컬 스토리지에서 가져온 초기값 설정
+		const likeCountElement = $('#likeCount'); // likeCount 표시 요소
 
-        // 좋아요 버튼 클릭 이벤트
-        likeBtn.on('click', function() {
-            if (likeBtn.hasClass('liked')) {
-                // 좋아요 취소
-                likeBtn.removeClass('liked');
-                likeBtn.text('👍 Like');
-                localStorage.setItem('liked_${article.id}', 'false');
-            } else {
-                // 좋아요 설정
-                likeBtn.addClass('liked');
-                likeBtn.text('❤️ Liked');
-                localStorage.setItem('liked_${article.id}', 'true');
-            }
-        });
-    });
+		// 초기 likeCount 설정
+		likeCountElement.text(likeCount);
+
+		// 페이지 로드 시, 로컬 스토리지에서 좋아요 상태를 가져와 설정
+		if (localStorage.getItem('liked_' + article.id) === 'true') {
+			likeBtn.addClass('liked');
+			likeBtn.text('❤️');
+		}
+
+		// 좋아요 버튼 클릭 이벤트
+		likeBtn.on('click', function() {
+			if (likeBtn.hasClass('liked')) {
+				// 좋아요 취소
+				likeBtn.removeClass('liked');
+				likeBtn.text('👍');
+				localStorage.setItem('liked_' + article.id, 'false');
+				likeCount--;
+			} else {
+				// 좋아요 설정
+				likeBtn.addClass('liked');
+				likeBtn.text('❤️');
+				localStorage.setItem('liked_' + article.id, 'true');
+				likeCount++;
+			}
+			// likeCount 업데이트 및 저장
+			likeCountElement.text(likeCount);
+			localStorage.setItem('likeCount_' + article.id, likeCount);
+		});
+	}
+	// 함수 호출
+	$(function() {
+		initializeLikeButton();
+	});
 </script>
 
 
@@ -87,8 +111,9 @@
 	<div class="detail-item">
 		<span class="label">내용:</span> ${article.body}
 	</div>
-	 <button id="likeBtn">👍 Like</button>
-	
+	<button id="likeBtn">👍</button>
+	<span id="likeCount" class="like-count">0</span>
+
 	<div class="actions">
 		<c:if test="${article.userCanModify}">
 			<a href="../article/modify?id=${article.id}" class="btn">게시물 수정</a>

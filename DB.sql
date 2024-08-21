@@ -61,8 +61,51 @@ CREATE TABLE board(
 						delDate DATETIME COMMENT '탈퇴 날짜'
 );
 
+#좋아요 기능 테이블 생성
+CREATE TABLE reactionPoint (
+	id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    regDate DATETIME NOT NULL,
+	updateDate DATETIME NOT NULL,
+    memberId INT(10) UNSIGNED NOT NULL,
+    relId INT(10) UNSIGNED NOT NULL,
+    relTypeCode CHAR(50) NOT NULL,
+    likePoint INT(10) NOT NULL DEFAULT 0,
+    unlikePoint INT(10) NOT NULL DEFAULT 0,
+    UNIQUE KEY `unique_member_relTypeCode` (memberId, relId, relTypeCode)
+);
+
+
 
 ##############################   TEST   ####################################
+-- 좋아요 테스트 데이터.
+INSERT INTO reactionPoint
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 2,
+relId = 1,
+relTypeCode = 'article', -- 예: 게시글에 대한 좋아요
+likePoint = 1,
+unlikePoint = 0;
+
+INSERT INTO reactionPoint
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 3,
+relId = 1,
+relTypeCode = 'article', -- 예: 게시글에 대한 싫어요
+likePoint = 0,
+unlikePoint = 1;
+
+INSERT INTO reactionPoint
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 2,
+relId = 2,
+relTypeCode = 'article', -- 예: 게시글에 대한 좋아요
+likePoint = 1,
+unlikePoint = 0;
+
+
 -- 게시판 테스트 데이터.	
 INSERT INTO board
 SET regDate = NOW(),

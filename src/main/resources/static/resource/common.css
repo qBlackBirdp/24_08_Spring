@@ -391,3 +391,37 @@ li:hover .sub-menu {
 .navigation {
 	margin-top: 30px;
 }
+
+/* 좋아요 숫자 스타일 */
+#likeBtn {
+	padding: 10px 20px;
+	font-size: 16px;
+	background-color: #007bff;
+	color: #ffffff;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	margin-right: 10px;
+	transition: background-color 0.3s ease;
+}
+
+#likeBtn.liked {
+	background-color: #ff4757;
+}
+
+#likeCount {
+	font-size: 18px;
+	font-weight: bold;
+	color: #ff4757;
+	margin-left: 10px;
+}
+
+/* 호버 효과 */
+#likeBtn:hover {
+	background-color: #0056b3;
+}
+
+/* 좋아요 설정된 경우 */
+#likeBtn.liked:hover {
+	background-color: #e84118;
+}
