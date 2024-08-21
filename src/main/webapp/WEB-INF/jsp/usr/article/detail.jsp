@@ -4,6 +4,85 @@
 <c:set var="pageTitle" value="게시물 상세보기"></c:set>
 <%@ include file="../common/head.jspf"%>
 
+<script>
+	const params = {};
+	params.id = parseInt('${param.id}');
+</script>
+
+<script>
+	function ArticleDetail__doIncreaseHitCount() {
+		$.get('../article/doIncreaseHitCountRd', {
+			id : params.id,
+			ajaxMode : 'Y'
+		}, function(data) {
+			console.log(data);
+			console.log(data.data1);
+			$('.article-detail__hit-count').empty().html(data.data1);
+		}, 'json')
+	}
+	$(function() {
+				ArticleDetail__doIncreaseHitCount();
+		//setTimeout(ArticleDetail__doIncreaseHitCount, 2000);
+	})
+</script>
+<script>
+    $(document).ready(function() {
+        const likeBtn = $('#likeBtn');
+
+        // 페이지 로드 시, 로컬 스토리지에서 좋아요 상태를 가져와 설정
+        if (localStorage.getItem('liked_${article.id}') === 'true') {
+            likeBtn.addClass('liked');
+            likeBtn.text('❤️ Liked');
+        }
+
+        // 좋아요 버튼 클릭 이벤트
+        likeBtn.on('click', function() {
+            if (likeBtn.hasClass('liked')) {
+                // 좋아요 취소
+                likeBtn.removeClass('liked');
+                likeBtn.text('👍 Like');
+                localStorage.setItem('liked_${article.id}', 'false');
+            } else {
+                // 좋아요 설정
+                likeBtn.addClass('liked');
+                likeBtn.text('❤️ Liked');
+                localStorage.setItem('liked_${article.id}', 'true');
+            }
+        });
+    });
+</script>
+<style>
+    #likeBtn {
+        padding: 10px 20px;
+        border: none;
+        background-color: #008CBA;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    #likeBtn.liked {
+        background-color: #e74c3c;
+    }
+
+    .detail-item {
+        margin-bottom: 10px;
+    }
+
+    .label {
+        font-weight: bold;
+    }
+
+    .actions {
+        margin-top: 20px;
+    }
+
+    .navigation {
+        margin-top: 30px;
+    }
+</style>
+
 <hr />
 
 <div class="article-detail">
@@ -20,7 +99,8 @@
 		<span class="label">번호:</span> ${article.id}
 	</div>
 	<div class="detail-item">
-		<span class="label">조회수:</span> ${article.hitCount}
+		<span class="label">조회수: <span
+			class=" article-detail__hit-count">${article.hitCount}</span></span>
 	</div>
 	<div class="detail-item">
 		<span class="label">날짜:</span> ${article.regDate}
@@ -37,6 +117,8 @@
 	<div class="detail-item">
 		<span class="label">내용:</span> ${article.body}
 	</div>
+	 <button id="likeBtn">👍 Like</button>
+	
 	<div class="actions">
 		<c:if test="${article.userCanModify}">
 			<a href="../article/modify?id=${article.id}" class="btn">게시물 수정</a>

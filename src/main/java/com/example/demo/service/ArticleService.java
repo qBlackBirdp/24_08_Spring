@@ -102,7 +102,7 @@ public class ArticleService {
 			int itemsPerPage, int offset) {
 		return articleRepository.getArticlesByPageAndSearch(boardId, searchField, searchKeyword, itemsPerPage, offset);
 	}
-
+	//조회수
 	public ResultData increaseHitCount(int id) {
 		int affectRows = articleRepository.increaseHitCount(id);
 
@@ -110,6 +110,10 @@ public class ArticleService {
 			return ResultData.from("F-1", "해당 게시글은 존재하지 않습니다.", "id", id);
 
 		return ResultData.from("S-1", "해당 게시글의 조회수가 증가합니다.", "id", id);
+	}
+
+	public Object getArticleHitCount(int id) {
+		return articleRepository.getArticleHitCount(id);
 	}
 
 }

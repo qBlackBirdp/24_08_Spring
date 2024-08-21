@@ -75,6 +75,13 @@ public interface ArticleRepository {
 	public List<Article> getArticlesByPageAndSearch(int boardId, String searchField, String searchKeyword, int limit,
 			int offset);
 	
+	@Select("""
+			SELECT hitCount
+			FROM article
+			WHERE id = #{id}
+				""")
+	public int getArticleHitCount(int id);
+	
 	@Update("""
 			UPDATE article
 			SET hitCount = hitCount + 1
