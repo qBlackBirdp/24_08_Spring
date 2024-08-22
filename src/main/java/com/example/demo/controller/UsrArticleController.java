@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -47,6 +49,18 @@ public class UsrArticleController {
 
 		return "usr/article/detail";
 	}
+	@RequestMapping("/article/doReaction")
+    @ResponseBody
+    public Map<String, Object> doReaction(HttpServletRequest req ,@RequestParam int id, @RequestParam String relTypeCode, @RequestParam int relId) {
+		Rq rq = (Rq) req.getAttribute("rq");
+		
+        int resultPoint = reactionPointService.toggleReactionPoint(rq.getLoginedMemberId(), relTypeCode, relId);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", resultPoint > 0 ? "liked" : "unliked");
+        return response;
+    }
+	
 	
 	@RequestMapping("/usr/article/doIncreaseHitCountRd")
 	@ResponseBody
