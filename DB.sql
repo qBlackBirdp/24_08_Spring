@@ -50,61 +50,65 @@ FROM `member`;
 -- From `member`
 -- where id = 7;
 
-#게시판 테이블 생성
-CREATE TABLE board(
-                        id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-                        regDate DATETIME NOT NULL,
-                        updateDate DATETIME NOT NULL,
-                        `code` CHAR(50) NOT NULL Unique comment '공지사항, QnA 등',
-                        `name` CHAR(50) NOT NULL Unique comment '',
-						delStatus TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '탈퇴여부 (0=탈퇴 전, 1=탈퇴 후)',
-						delDate DATETIME COMMENT '탈퇴 날짜'
-);
-
-#좋아요 기능 테이블 생성
-CREATE TABLE reactionPoint (
-	id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+# reactionPoint 테이블 생성
+CREATE TABLE reactionPoint(
+    id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     regDate DATETIME NOT NULL,
-	updateDate DATETIME NOT NULL,
+    updateDate DATETIME NOT NULL,
     memberId INT(10) UNSIGNED NOT NULL,
-    relId INT(10) UNSIGNED NOT NULL,
-    relTypeCode CHAR(50) NOT NULL,
-    likePoint INT(10) NOT NULL DEFAULT 0,
-    unlikePoint INT(10) NOT NULL DEFAULT 0,
-    UNIQUE KEY `unique_member_relTypeCode` (memberId, relId, relTypeCode)
+    relTypeCode CHAR(50) NOT NULL COMMENT '관련 데이터 타입 코드',
+    relId INT(10) NOT NULL COMMENT '관련 데이터 번호',
+    `point` INT(10) NOT NULL
 );
 
+# reactionPoint 테스트 데이터 생성
+# 1번 회원이 1번 글에 싫어요
+INSERT INTO reactionPoint
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 1,
+relTypeCode = 'article',
+relId = 1,
+`point` = -1;
 
+# 1번 회원이 2번 글에 좋아요
+INSERT INTO reactionPoint
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 1,
+relTypeCode = 'article',
+relId = 2,
+`point` = 1;
 
-##############################   TEST   ####################################
--- 좋아요 테스트 데이터.
+# 2번 회원이 1번 글에 싫어요
 INSERT INTO reactionPoint
 SET regDate = NOW(),
 updateDate = NOW(),
 memberId = 2,
+relTypeCode = 'article',
 relId = 1,
-relTypeCode = 'article', -- 예: 게시글에 대한 좋아요
-likePoint = 1,
-unlikePoint = 0;
+`point` = -1;
 
+# 2번 회원이 2번 글에 싫어요
+INSERT INTO reactionPoint
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 2,
+relTypeCode = 'article',
+relId = 2,
+`point` = -1;
+
+# 3번 회원이 1번 글에 좋아요
 INSERT INTO reactionPoint
 SET regDate = NOW(),
 updateDate = NOW(),
 memberId = 3,
+relTypeCode = 'article',
 relId = 1,
-relTypeCode = 'article', -- 예: 게시글에 대한 싫어요
-likePoint = 0,
-unlikePoint = 1;
+`point` = 1;
 
-INSERT INTO reactionPoint
-SET regDate = NOW(),
-updateDate = NOW(),
-memberId = 2,
-relId = 2,
-relTypeCode = 'article', -- 예: 게시글에 대한 좋아요
-likePoint = 1,
-unlikePoint = 0;
 
+##############################   TEST   ####################################
 
 -- 게시판 테스트 데이터.	
 INSERT INTO board
