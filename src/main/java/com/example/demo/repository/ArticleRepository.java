@@ -31,14 +31,19 @@ public interface ArticleRepository {
 	public int getLastInsertId();
 
 	@Select("""
-			SELECT a.* , m.nickname AS extra__writer
-			FROM article AS a
-			INNER JOIN `member` AS m
-			ON a.memberId = m.id
-			WHERE a.id = #{id}
+			SELECT A.*, M.nickname AS extra__writer,
+			IFNULL(SUM(RP.point),0) AS extra__sumReactionPoint,
+			IFNULL(SUM(IF(RP.point > 0,RP.point,0)),0) AS extra__goodReactionPoint,
+			IFNULL(SUM(IF(RP.point < 0,RP.point,0)),0) AS extra__badReactionPoint
+			FROM article AS A
+			INNER JOIN `member` AS M
+			ON A.memberId = M.id
+			LEFT JOIN reactionPoint AS RP
+			ON A.id = RP.relId AND RP.relTypeCode = 'article'
+			WHERE A.id = #{id}
 				""")
 	public Article getForPrintArticle(int id);
-	
+
 	@Select("""
 			SELECT a.*, m.nickname AS extra__writer
 			FROM article a
@@ -50,42 +55,95 @@ public interface ArticleRepository {
 				""")
 	public List<Article> getArticlesByBorderId(int boardId);
 
-	//페이지네이션
+	// 페이지네이션
 	public List<Article> getArticlesByPage(int boardId, int offset, int limit);
 
 	public int getTotalArticlesCount(int boardId);
-	
-	//검색기능 
-//	@Select("""
-//		    SELECT COUNT(*)
-//		    FROM article
-//		    WHERE boardId = #{boardId}
-//		    AND ${searchField} LIKE CONCAT('%', #{searchKeyword}, '%')
-//		""")
-	public int getTotalArticlesCountBySearch(int boardId, String searchField, String searchKeyword);
-	
-//	@Select("""
-//		    SELECT *
-//		    FROM article
-//		    WHERE boardId = #{boardId}
-//		    AND ${searchField} LIKE CONCAT('%', #{searchKeyword}, '%')
-//		    ORDER BY id DESC
-//		    LIMIT #{limit} OFFSET #{offset}
-//		""")
-	public List<Article> getArticlesByPageAndSearch(int boardId, String searchField, String searchKeyword, int limit,
-			int offset);
-	
+
+	// 검색기능
+	@Select("""
+			<script>
+				SELECT A.*, M.nickname AS extra__writer,
+				IFNULL(SUM(RP.point),0) AS extra__sumReactionPoint,
+				IFNULL(SUM(IF(RP.point &gt; 0,RP.point,0)),0) AS extra__goodReactionPoint,
+				IFNULL(SUM(IF(RP.point &lt; 0,RP.point,0)),0) AS extra__badReactionPoint
+				FROM article AS A
+				INNER JOIN `member` AS M
+				ON A.memberId = M.id
+				WHERE 1
+				<if test="boardId != 0">
+					AND boardId = #{boardId}
+				</if>
+				<if test="searchKeyword != ''">
+					<choose>
+						<when test="searchKeywordTypeCode == 'title'">
+							AND A.title LIKE CONCAT('%', #{searchKeyword}, '%')
+						</when>
+						<when test="searchKeywordTypeCode == 'body'">
+							AND A.`body` LIKE CONCAT('%', #{searchKeyword}, '%')
+						</when>
+						<when test="searchKeywordTypeCode == 'writer'">
+							AND M.nickname LIKE CONCAT('%', #{searchKeyword}, '%')
+						</when>
+						<otherwise>
+							AND A.title LIKE CONCAT('%', #{searchKeyword}, '%')
+							OR A.`body` LIKE CONCAT('%', #{searchKeyword}, '%')
+						</otherwise>
+					</choose>
+				</if>
+				GROUP BY A.id
+				ORDER BY A.id DESC
+				<if test="limitFrom >= 0">
+					LIMIT #{limitFrom}, #{limitTake}
+				</if>
+				</script>
+			""")
+	public List<Article> getForPrintArticles(int boardId, int limitFrom, int limitTake, String searchKeywordTypeCode,
+			String searchKeyword);
+
+	@Select("""
+			<script>
+				SELECT COUNT(*), A.*, M.nickname AS extra__writer
+				FROM article AS A
+				INNER JOIN `member` AS M
+				ON A.memberId = M.id
+				WHERE 1
+				<if test="boardId != 0">
+					AND A.boardId = #{boardId}
+				</if>
+				<if test="searchKeyword != ''">
+					<choose>
+						<when test="searchKeywordTypeCode == 'title'">
+							AND A.title LIKE CONCAT('%', #{searchKeyword}, '%')
+						</when>
+						<when test="searchKeywordTypeCode == 'body'">
+							AND A.`body` LIKE CONCAT('%', #{searchKeyword}, '%')
+						</when>
+						<when test="searchKeywordTypeCode == 'writer'">
+							AND M.nickname LIKE CONCAT('%', #{searchKeyword}, '%')
+						</when>
+						<otherwise>
+							AND A.title LIKE CONCAT('%', #{searchKeyword}, '%')
+							OR A.`body` LIKE CONCAT('%', #{searchKeyword}, '%')
+						</otherwise>
+					</choose>
+				</if>
+				ORDER BY A.id DESC;
+			</script>
+			""")
+	public int getArticleCount(int boardId, String searchKeywordTypeCode, String searchKeyword);
+
 	@Select("""
 			SELECT hitCount
 			FROM article
 			WHERE id = #{id}
 				""")
 	public int getArticleHitCount(int id);
-	
+
 	@Update("""
 			UPDATE article
 			SET hitCount = hitCount + 1
 			WHERE id = #{id}
 			""")
-	public int increaseHitCount(int id);	
+	public int increaseHitCount(int id);
 }

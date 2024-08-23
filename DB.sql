@@ -8,47 +8,152 @@ DROP DATABASE IF EXISTS `24_08_Spring`;
 CREATE DATABASE `24_08_Spring`;
 USE `24_08_Spring`;
 
-SHOW TABLES;
-
-#게시물 테이블 생성
+# 게시글 테이블 생성
 CREATE TABLE article(
-                        id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-                        regDate DATETIME NOT NULL,
-                        updateDate DATETIME NOT NULL,
-                        title CHAR(100) NOT NULL,
-                        `body` TEXT NOT NULL
+      id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+      regDate DATETIME NOT NULL,
+      updateDate DATETIME NOT NULL,
+      title CHAR(100) NOT NULL,
+      `body` TEXT NOT NULL
 );
-
-ALTER TABLE article ADD COLUMN memberId INT UNSIGNED NOT NULL AFTER updateDate;
-
-ALTER TABLE article ADD COLUMN boardId INT(10) UNSIGNED NOT NULL AFTER memberId;
-
-SELECT *
-FROM article;
 
 # 회원 테이블 생성
-CREATE TABLE `member`
-(
-    id         int(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    regDate    DATETIME         NOT NULL,
-    updateDate DATETIME         NOT NULL,
-    loginId   char(30)        not null,
-    loginPw   char(100)        not null,
-    `authLevel` SMALLINT(2) UNSIGNED DEFAULT 3 COMMENT '권한레벨 (3=일반, 7=관리자)',
-    `name`      char(100)        NOT NULL,
-    nickname	char(20)		NOT NULL,
-    cellphoneNum char(20) 		NOT NULL,
-	email 		char(100)		NOT NULL,
-    delStatus TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '탈퇴여부 (0=탈퇴 전, 1=탈퇴 후)',
-    delDate DATETIME COMMENT '탈퇴 날짜'
+CREATE TABLE `member`(
+      id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+      regDate DATETIME NOT NULL,
+      updateDate DATETIME NOT NULL,
+      loginId CHAR(30) NOT NULL,
+      loginPw CHAR(100) NOT NULL,
+      `authLevel` SMALLINT(2) UNSIGNED DEFAULT 3 COMMENT '권한 레벨 (3=일반,7=관리자)',
+      `name` CHAR(20) NOT NULL,
+      nickname CHAR(20) NOT NULL,
+      cellphoneNum CHAR(20) NOT NULL,
+      email CHAR(50) NOT NULL,
+      delStatus TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '탈퇴 여부 (0=탈퇴 전, 1=탈퇴 후)',
+      delDate DATETIME COMMENT '탈퇴 날짜'
 );
 
-SELECT *
-FROM `member`;
 
--- DELETE
--- From `member`
--- where id = 7;
+
+## 게시글 테스트 데이터 생성
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+title = '제목1',
+`body` = '내용1';
+
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+title = '제목2',
+`body` = '내용2';
+
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+title = '제목3',
+`body` = '내용3';
+
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+title = '제목4',
+`body` = '내용4';
+
+
+## 회원 테스트 데이터 생성
+## (관리자)
+INSERT INTO `member`
+SET regDate = NOW(),
+updateDate = NOW(),
+loginId = 'admin',
+loginPw = 'admin',
+`authLevel` = 7,
+`name` = '관리자',
+nickname = '관리자',
+cellphoneNum = '01012341234',
+email = 'abc@gmail.com';
+
+## (일반)
+INSERT INTO `member`
+SET regDate = NOW(),
+updateDate = NOW(),
+loginId = 'test1',
+loginPw = 'test1',
+`name` = '회원1_이름',
+nickname = '회원1_닉네임',
+cellphoneNum = '01043214321',
+email = 'abcd@gmail.com';
+
+## (일반)
+INSERT INTO `member`
+SET regDate = NOW(),
+updateDate = NOW(),
+loginId = 'test2',
+loginPw = 'test2',
+`name` = '회원2_이름',
+nickname = '회원2_닉네임',
+cellphoneNum = '01056785678',
+email = 'abcde@gmail.com';
+
+ALTER TABLE article ADD COLUMN memberId INT(10) UNSIGNED NOT NULL AFTER updateDate;
+
+UPDATE article
+SET memberId = 2
+WHERE id IN (1,2);
+
+UPDATE article
+SET memberId = 3
+WHERE id IN (3,4);
+
+
+# 게시판(board) 테이블 생성
+CREATE TABLE board (
+      id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+      regDate DATETIME NOT NULL,
+      updateDate DATETIME NOT NULL,
+      `code` CHAR(50) NOT NULL UNIQUE COMMENT 'notice(공지사항) free(자유) QnA(질의응답) ...',
+      `name` CHAR(20) NOT NULL UNIQUE COMMENT '게시판 이름',
+      delStatus TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '삭제 여부 (0=삭제 전, 1=삭제 후)',
+      delDate DATETIME COMMENT '삭제 날짜'
+);
+
+## 게시판(board) 테스트 데이터 생성
+INSERT INTO board
+SET regDate = NOW(),
+updateDate = NOW(),
+`code` = 'NOTICE',
+`name` = '공지사항';
+
+INSERT INTO board
+SET regDate = NOW(),
+updateDate = NOW(),
+`code` = 'FREE',
+`name` = '자유';
+
+INSERT INTO board
+SET regDate = NOW(),
+updateDate = NOW(),
+`code` = 'QnA',
+`name` = '질의응답';
+
+ALTER TABLE article ADD COLUMN boardId INT(10) UNSIGNED NOT NULL AFTER `memberId`;
+
+UPDATE article
+SET boardId = 1
+WHERE id IN (1,2);
+
+UPDATE article
+SET boardId = 2
+WHERE id = 3;
+
+UPDATE article
+SET boardId = 3
+WHERE id = 4;
+
+ALTER TABLE article ADD COLUMN hitCount INT(10) UNSIGNED NOT NULL DEFAULT 0 AFTER `body`;
+
+
 
 # reactionPoint 테이블 생성
 CREATE TABLE reactionPoint(
@@ -107,123 +212,96 @@ relTypeCode = 'article',
 relId = 1,
 `point` = 1;
 
+###(INIT 끝)
+##########################################
+SELECT *
+FROM article
+ORDER BY id DESC;
 
-##############################   TEST   ####################################
+SELECT * FROM board;
 
--- 게시판 테스트 데이터.	
-INSERT INTO board
-SET regDate = NOW(),
-updateDate = NOW(),
-`code` = 'notice',
-`name` = '공지사항';
+SELECT * FROM `member`;
 
-INSERT INTO board
-SET regDate = NOW(),
-updateDate = NOW(),
-`code` = 'free',
-`name` = '자유';
+SELECT * FROM `reactionPoint`;
 
-INSERT INTO board
-SET regDate = NOW(),
-updateDate = NOW(),
-`code` = 'QnA',
-`name` = '질의응답';
+###############################################################################
 
-UPDATE article
-SET boardId = 1
-WHERE id IN (1,2, 3, 4);
 
-UPDATE article
-SET boardId = 2
-WHERE id in (5, 6);
-
-UPDATE article
-SET boardId = 3
-WHERE id = 7;
-
-INSERT INTO article
-SET regDate = NOW(),
-    updateDate = NOW(),
-    title = CONCAT('제목', SUBSTRING(RAND() * 1000 FROM 1 FOR 2)),
-    `body` = CONCAT('내용', SUBSTRING(RAND() * 1000 FROM 1 FOR 2)),
-    memberId = 3,
-    boardId = 3;
-    
-INSERT INTO article
-SET regDate = NOW(),
-    updateDate = NOW(),
-    title = CONCAT('제목', SUBSTRING(RAND() * 1000 FROM 1 FOR 2)),
-    `body` = CONCAT('내용', SUBSTRING(RAND() * 1000 FROM 1 FOR 2)),
-    memberId = 4,
-    boardId = 3;
-    
 ## 게시글 테스트 데이터 대량 생성
 INSERT INTO article
 (
     regDate, updateDate, memberId, boardId, title, `body`
 )
-select now(), now(), floor(RAND() * 2) + 2, FLOOR(RAND() * 3) + 1, CONCAT('제목__', RAND()), CONCAT('내용__', RAND())
-from article;
-
-
-select floor(RAND() * 2) + 2;
-
-SELECT FLOOR(RAND() * 3) + 1;
-
-SELECT *
+SELECT NOW(), NOW(), FLOOR(RAND() * 2) + 2, FLOOR(RAND() * 3) + 1, CONCAT('제목__', RAND()), CONCAT('내용__', RAND())
 FROM article;
 
--- 회원 테스트데이터.
-# 관리자.
-INSERT INTO `member`
+
+INSERT INTO article
 SET regDate = NOW(),
-    updateDate = NOW(),
-    loginId = 'admin',
-    loginPw = 'admin',
-    `authLevel` = 7,
-    `name` = '관리자',
-    nickname = '관리자',
-    cellphoneNum = '01012341234',
-    email = 'abcddd@gmail.com';
+updateDate = NOW(),
+title = CONCAT('제목__', RAND()),
+`body` = CONCAT('내용__', RAND());
 
+SHOW FULL COLUMNS FROM `member`;
+DESC `member`;
 
-INSERT INTO `member`
-SET regDate = NOW(),
-    updateDate = NOW(),
-    loginId = 'test1',
-    loginPw = 'test1',
-    `name` = '김철수',
-    nickname = '김철수 닉네임',
-    cellphoneNum = '01011312242',
-    email = 'abcddd@gmail.com';
+SELECT *
+FROM article
+WHERE boardId = 1
+ORDER BY id DESC;
 
-INSERT INTO `member`
-SET regDate = NOW(),
-    updateDate = NOW(),
-    loginId = 'test2',
-    loginPw = 'test2',
-    `name` = '홍길동',
-    nickname = '홍길동 닉네임',
-    cellphoneNum = '01011112222',
-    email = 'abc@gmail.com';
+SELECT *
+FROM article
+WHERE boardId = 2
+ORDER BY id DESC;
 
+SELECT *
+FROM article
+WHERE boardId = 3
+ORDER BY id DESC;
 
+SELECT COUNT(*) AS cnt
+FROM article
+WHERE boardId = 1
+ORDER BY id DESC;
 
-SELECT a.*, m.id
-FROM article a
-         INNER JOIN `member` m
-                    ON a.memberId = m.id
-WHERE m.id = 3;
+SELECT *
+FROM article
+WHERE boardId = 1 AND title LIKE '%123%'
+ORDER BY id DESC;
 
-UPDATE article a
-    INNER JOIN `member` m
-SET a.updateDate = NOW(),
-    a.title = '2222',
-    a.`body`= '2222'
-WHERE a.id = 1 AND m.id = 1;
+SELECT *
+FROM article
+WHERE boardId = 1 AND `body` LIKE '%123%'
+ORDER BY id DESC;
 
-SELECT a.*, m.nickname AS extra__writer
-FROM article a
-INNER JOIN `member` m ON a.memberId = m.id
-WHERE a.boardId = 1;
+SELECT *
+FROM article
+WHERE boardId = 1 AND title LIKE '%123%' OR `body` LIKE '%123%'
+ORDER BY id DESC;
 
+SELECT COUNT(*)
+FROM article AS A
+WHERE A.boardId = 1 
+ORDER BY A.id DESC;
+
+-- boardId=1&searchKeywordTypeCode=nickname&searchKeyword=1
+
+SELECT COUNT(*)
+FROM article AS A
+WHERE A.boardId = 1 AND A.memberId = 3
+ORDER BY A.id DESC;
+
+SELECT hitCount
+FROM article WHERE id = 3;
+
+SELECT A.*, M.nickname AS extra__writer,
+IFNULL(SUM(RP.point),0) AS extra__sumReactionPoint,
+IFNULL(SUM(IF(RP.point > 0,RP.point,0)),0) AS extra__goodReactionPoint,
+IFNULL(SUM(IF(RP.point < 0,RP.point,0)),0) AS extra__badReactionPoint
+FROM article AS A
+INNER JOIN `member` AS M
+ON A.memberId = M.id
+LEFT JOIN reactionPoint AS RP
+ON A.id = RP.relId AND RP.relTypeCode = 'article'
+WHERE A.id = 1;

@@ -33,46 +33,37 @@
 	})
 </script>
 <script>
-	function initializeLikeButton() {
-		const likeBtn = $('#likeBtn');
+	function reaction(point) {
+		const articleId = ${article.id};
+		const relTypeCode = 'article';
+		const relId = articleId;
 
-		let likeCount = parseInt(localStorage
-				.getItem('likeCount_' + article.id)
-				|| '0'); // 로컬 스토리지에서 가져온 초기값 설정
-		const likeCountElement = $('#likeCount'); // likeCount 표시 요소
-
-		// 초기 likeCount 설정
-		likeCountElement.text(likeCount);
-
-		// 페이지 로드 시, 로컬 스토리지에서 좋아요 상태를 가져와 설정
-		if (localStorage.getItem('liked_' + article.id) === 'true') {
-			likeBtn.addClass('liked');
-			likeBtn.text('❤️');
-		}
-
-		// 좋아요 버튼 클릭 이벤트
-		likeBtn.on('click', function() {
-			if (likeBtn.hasClass('liked')) {
-				// 좋아요 취소
-				likeBtn.removeClass('liked');
-				likeBtn.text('👍');
-				localStorage.setItem('liked_' + article.id, 'false');
-				likeCount--;
-			} else {
-				// 좋아요 설정
-				likeBtn.addClass('liked');
-				likeBtn.text('❤️');
-				localStorage.setItem('liked_' + article.id, 'true');
-				likeCount++;
+		$.post('/article/doReaction', {
+			id : articleId,
+			relTypeCode : relTypeCode,
+			relId : relId,
+			newPoint : point
+		// 좋아요는 1, 싫어요는 -1로 설정
+		}, function(response) {
+			if (response.status === 'liked') {
+				alert('게시물 좋아요.');
+			} else if (response.status === 'unliked') {
+				alert('게시물 좋아요 취소.');
+			} else if (response.status === 'disliked') {
+				alert('게시물 싫어요.');
+			} else if (response.status === 'undisliked') {
+				alert('게시물 싫어요 취소.');
 			}
-			// likeCount 업데이트 및 저장
-			likeCountElement.text(likeCount);
-			localStorage.setItem('likeCount_' + article.id, likeCount);
 		});
-	}
-	// 함수 호출
-	$(function() {
-		initializeLikeButton();
+
+	// 좋아요 버튼 클릭 시
+	$('#likeBtn').on('click', function() {
+		reaction(1); // 좋아요는 1로 설정
+	});
+
+	// 싫어요 버튼 클릭 시
+	$('#dislikeBtn').on('click', function() {
+		reaction(-1); // 싫어요는 -1로 설정
 	});
 </script>
 
@@ -111,8 +102,20 @@
 	<div class="detail-item">
 		<span class="label">내용:</span> ${article.body}
 	</div>
-	<button id="likeBtn">👍</button>
-	<span id="likeCount" class="like-count">0</span>
+	<div>
+		<span class="label">Sum</span>${article.extra__sumReactionPoint}
+	</div>
+	<div>
+		<span class="label">LIKE</span>${article.extra__goodReactionPoint}
+	</div>
+	<div>
+		<span class="label">Bad</span>${article.extra__badReactionPoint}
+	</div>
+	<c:if test="${rq.isLogined()}">
+		<button id="likeBtn">👍</button>
+		<button id="disLikeBtn">👎</button>
+	</c:if>
+	👍<span id="likeCount" class="like-count">0</span>
 
 	<div class="actions">
 		<c:if test="${article.userCanModify}">

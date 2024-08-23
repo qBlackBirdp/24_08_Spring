@@ -1,8 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<c:set var="pageTitle" value="${board.code } 목록"></c:set>
+<c:set var="pageTitle" value="${board.code} 목록"></c:set>
 <%@ include file="../common/head.jspf"%>
 
 <hr />
@@ -36,78 +35,28 @@
 </table>
 
 <c:if test="${rq.isLogined()}">
-	<div
-		style="text-align: right; margin-bottom: 10px; margin-right: 20px;">
+	<div style="text-align: right; margin-bottom: 10px; margin-right: 20px;">
 		<a href="write" class="btn">게시물 작성하기</a>
 	</div>
 </c:if>
 
-<c:if test="${totalPages > 0}">
-	<div class="pagination">
-		<c:set var="baseUri" value="?boardId=${boardId}" />
-		<c:if
-			test="${searchField != null && !searchField.isEmpty() && searchKeyword != null && !searchKeyword.isEmpty()}">
-			<c:set var="baseUri"
-				value="${baseUri}&searchField=${searchField}&searchKeyword=${searchKeyword}" />
-		</c:if>
 
-		<c:if test="${currentPage > 1}">
-			<a href="${baseUri}&page=${currentPage - 1}" class="btn">Previous</a>
-		</c:if>
-
-		<c:choose>
-			<c:when test="${currentPage == 1}">
-				<span class="current">1</span>
-			</c:when>
-			<c:otherwise>
-				<a href="${baseUri}&page=1" class="btn">1</a>
-			</c:otherwise>
-		</c:choose>
-
-		<c:forEach var="i" begin="${currentPage > 3 ? currentPage - 2 : 2}"
-			end="${currentPage + 2 > totalPages ? totalPages - 1 : currentPage + 2}">
-			<c:choose>
-				<c:when test="${i == currentPage}">
-					<span class="current">${i}</span>
-				</c:when>
-				<c:otherwise>
-					<a href="${baseUri}&page=${i}" class="btn">${i}</a>
-				</c:otherwise>
-			</c:choose>
-		</c:forEach>
-
-		<c:choose>
-			<c:when test="${currentPage == totalPages}">
-				<span class="current">${totalPages}</span>
-			</c:when>
-			<c:otherwise>
-				<a href="${baseUri}&page=${totalPages}" class="btn">${totalPages}</a>
-			</c:otherwise>
-		</c:choose>
-
-		<c:if test="${currentPage < totalPages}">
-			<a href="${baseUri}&page=${currentPage + 1}" class="btn">Next</a>
-		</c:if>
-	</div>
-
-</c:if>
 
 <div class="search-bar">
 	<form action="/usr/article/list" method="GET">
 		<div class="search-container">
-			<select name="searchField" class="search-field-select"
-				data-value="${param.searchField}">
-				<option value="title">제목</option>
-				<option value="body">내용</option>
-				<option value="extra__writer">작성자</option>
-			</select> <input type="text" name="searchKeyword" class="search-input"
-				placeholder="검색어를 입력하세요" value="${searchKeyword}">
+			<select name="searchField" class="search-field-select" data-value="${searchField}">
+				<option value="title" ${searchField == 'title' ? 'selected' : ''}>제목</option>
+				<option value="body" ${searchField == 'body' ? 'selected' : ''}>내용</option>
+				<option value="extra__writer" ${searchField == 'extra__writer' ? 'selected' : ''}>작성자</option>
+			</select>
+			<input type="text" name="searchKeyword" class="search-input" placeholder="검색어를 입력하세요" value="${searchKeyword}">
 
 			<button type="submit" class="search-button">검색</button>
 		</div>
 
-		<input type="hidden" name="boardId" value="${boardId}"> <input
-			type="hidden" name="page" value="1">
+		<input type="hidden" name="boardId" value="${boardId}">
+		<input type="hidden" name="page" value="1">
 	</form>
 </div>
 
@@ -157,9 +106,6 @@
 	background-color: #219080;
 }
 </style>
-
-
-
 
 </body>
 </html>

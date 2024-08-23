@@ -363,65 +363,76 @@ li:hover .sub-menu {
 
 /* 좋아요 버튼 스타일 */
 #likeBtn {
-	padding: 10px 20px;
-	border: none;
-	background-color: #008CBA;
-	color: white;
-	font-size: 16px;
-	cursor: pointer;
-	border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff; /* 파란색 */
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
 }
 
 #likeBtn.liked {
-	background-color: #e74c3c;
+    background-color: #ff4757; /* 빨간색 */
 }
 
-.detail-item {
-	margin-bottom: 10px;
+/* 싫어요 버튼 스타일 */
+#disLikeBtn {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #6c757d; /* 회색 */
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
 }
 
-.label {
-	font-weight: bold;
-}
-
-.actions {
-	margin-top: 20px;
-}
-
-.navigation {
-	margin-top: 30px;
-}
-
-/* 좋아요 숫자 스타일 */
-#likeBtn {
-	padding: 10px 20px;
-	font-size: 16px;
-	background-color: #007bff;
-	color: #ffffff;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
-	margin-right: 10px;
-	transition: background-color 0.3s ease;
-}
-
-#likeBtn.liked {
-	background-color: #ff4757;
-}
-
-#likeCount {
-	font-size: 18px;
-	font-weight: bold;
-	color: #ff4757;
-	margin-left: 10px;
+#disLikeBtn.disliked {
+    background-color: #d9534f; /* 어두운 빨간색 */
 }
 
 /* 호버 효과 */
 #likeBtn:hover {
-	background-color: #0056b3;
+    background-color: #0056b3; /* 어두운 파란색 */
 }
 
-/* 좋아요 설정된 경우 */
 #likeBtn.liked:hover {
-	background-color: #e84118;
+    background-color: #e84118; /* 어두운 빨간색 */
+}
+
+#disLikeBtn:hover {
+    background-color: #5a6268; /* 어두운 회색 */
+}
+
+#disLikeBtn.disliked:hover {
+    background-color: #c9302c; /* 어두운 빨간색 */
+}
+
+/* 좋아요 숫자 스타일 */
+#likeCount {
+    font-size: 18px;
+    font-weight: bold;
+    color: #ff4757;
+    margin-left: 10px;
+}
+
+/* 게시물 상세 정보 스타일 */
+.detail-item {
+    margin-bottom: 10px;
+}
+
+.label {
+    font-weight: bold;
+}
+
+.actions {
+    margin-top: 20px;
+}
+
+.navigation {
+    margin-top: 30px;
 }

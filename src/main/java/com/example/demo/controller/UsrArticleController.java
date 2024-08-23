@@ -1,8 +1,7 @@
 package com.example.demo.controller;
 
-import java.util.HashMap;
+import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -51,10 +50,10 @@ public class UsrArticleController {
 	}
 	@RequestMapping("/article/doReaction")
     @ResponseBody
-    public ResultData doReaction(HttpServletRequest req ,@RequestParam int id, @RequestParam String relTypeCode, @RequestParam int relId) {
+    public ResultData doReaction(HttpServletRequest req , int id, String relTypeCode, int relId, int newPoint) {
 		Rq rq = (Rq) req.getAttribute("rq");
 		
-        int resultPoint = reactionPointService.toggleReactionPoint(rq.getLoginedMemberId(), relTypeCode, relId);
+        int resultPoint = reactionPointService.toggleReactionPoint(rq.getLoginedMemberId(), relTypeCode, relId, newPoint);
 
         String status = resultPoint > 0 ? "liked" : "unliked";
         ResultData<String> rd = ResultData.from("S-1", "좋아요기능 실행완료.", "status", status);
@@ -62,7 +61,6 @@ public class UsrArticleController {
         
         return rd;
     }
-	
 	
 	@RequestMapping("/usr/article/doIncreaseHitCountRd")
 	@ResponseBody
@@ -178,44 +176,40 @@ public class UsrArticleController {
 	}
 
 	@RequestMapping("/usr/article/list")
-	public String showList(Model model, HttpServletRequest req,
-	                       @RequestParam(defaultValue = "1") Integer page, 
-	                       @RequestParam(defaultValue = "1") int boardId,
-	                       @RequestParam(value = "searchField", required = false) String searchField,
-	                       @RequestParam(value = "searchKeyword", required = false) String searchKeyword) {
-		
+	public String showList(HttpServletRequest req, Model model, @RequestParam(defaultValue = "1") int boardId,
+			@RequestParam(defaultValue = "1") int page,
+			@RequestParam(defaultValue = "title,body") String searchKeywordTypeCode,
+			@RequestParam(defaultValue = "") String searchKeyword) throws IOException {
+
 		Rq rq = (Rq) req.getAttribute("rq");
-		
-		if (page == null) {
-		    page = 1; // 기본값 설정
+
+		Board board = boardService.getBoardById(boardId);
+
+		int articlesCount = articleService.getArticlesCount(boardId, searchKeywordTypeCode, searchKeyword);
+
+		// 한페이지에 글 10개
+		// 글 20개 -> 2page
+		// 글 25개 -> 3page
+		int itemsInAPage = 10;
+
+		int pagesCount = (int) Math.ceil(articlesCount / (double) itemsInAPage);
+
+		List<Article> articles = articleService.getForPrintArticles(boardId, itemsInAPage, page, searchKeywordTypeCode,
+				searchKeyword);
+
+		if (board == null) {
+			return rq.historyBackOnView("없는 게시판임");
 		}
 
-	    Board board = boardService.getBoardById(boardId);
-	    model.addAttribute("board", board);
+		model.addAttribute("articles", articles);
+		model.addAttribute("articlesCount", articlesCount);
+		model.addAttribute("pagesCount", pagesCount);
+		model.addAttribute("board", board);
+		model.addAttribute("page", page);
+		model.addAttribute("searchKeywordTypeCode", searchKeywordTypeCode);
+		model.addAttribute("searchKeyword", searchKeyword);
+		model.addAttribute("boardId", boardId);
 
-	    int itemsPerPage = 10;
-	    int offset = (page - 1) * itemsPerPage;
-	    List<Article> articles;
-	    int totalItems;
-	    int totalPages;
-
-	    if (searchField != null && searchKeyword != null && !searchKeyword.trim().isEmpty()) {
-	        totalItems = articleService.getTotalArticlesCountBySearch(boardId, searchField, searchKeyword);
-	        articles = articleService.getArticlesByPageAndSearch(boardId, searchField, searchKeyword, itemsPerPage, offset);
-	    } else {
-	        totalItems = articleService.getTotalArticlesCount(boardId);
-	        articles = articleService.getArticlesByPage(boardId, offset, itemsPerPage);
-	    }
-
-	    totalPages = (int) Math.ceil((double) totalItems / itemsPerPage);
-
-	    model.addAttribute("articles", articles);
-	    model.addAttribute("currentPage", page);
-	    model.addAttribute("totalPages", totalPages);
-	    model.addAttribute("boardId", boardId);
-	    model.addAttribute("searchField", searchField);
-	    model.addAttribute("searchKeyword", searchKeyword);
-
-	    return "usr/article/list";
+		return "usr/article/list";
 	}
 }

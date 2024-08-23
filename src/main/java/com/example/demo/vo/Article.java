@@ -23,5 +23,9 @@ public class Article {
 	private boolean UserCanModify;
 	private boolean UserCanDelete;
 	
+	private String extra__sumReactionPoint;
+	private String extra__goodReactionPoint;
+	private String extra__badReactionPoint;
+	
 	private int page;
 }

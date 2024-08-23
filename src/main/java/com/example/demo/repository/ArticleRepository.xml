@@ -72,49 +72,6 @@
 		WHERE boardId = #{boardId}
 	</select>
 
-	<select id="getTotalArticlesCountBySearch" resultType="int">
-		SELECT COUNT(*)
-		FROM article a
-		INNER JOIN `member` m ON a.memberId =
-		m.id
-		WHERE a.boardId = #{boardId}
-		<if test="searchField != null and searchKeyword != null">
-			<choose>
-				<when test="searchField == 'extra__writer'">
-					AND m.nickname LIKE CONCAT('%', #{searchKeyword},
-					'%')
-				</when>
-				<when test="searchField == 'title'">
-					AND a.title LIKE CONCAT('%', #{searchKeyword}, '%')
-				</when>
-				<when test="searchField == 'body'">
-					AND a.`body` LIKE CONCAT('%', #{searchKeyword}, '%')
-				</when>
-			</choose>
-		</if>
-	</select>
 
-	<select id="getArticlesByPageAndSearch"
-		resultMap="ArticleResultMap">
-		SELECT a.*, m.nickname AS extra__writer
-		FROM article a
-		INNER JOIN `member` m ON a.memberId = m.id
-		WHERE a.boardId = #{boardId}
-		<if test="searchField != null and searchKeyword != null">
-			<choose>
-				<when test="searchField == 'extra__writer'">
-					AND m.nickname LIKE CONCAT('%', #{searchKeyword}, '%')
-				</when>
-				<when test="searchField == 'title'">
-					AND a.title LIKE CONCAT('%', #{searchKeyword}, '%')
-				</when>
-				<when test="searchField == 'body'">
-					AND a.`body` LIKE CONCAT('%', #{searchKeyword}, '%')
-				</when>
-			</choose>
-		</if>
-		ORDER BY a.id DESC
-		LIMIT #{limit} OFFSET #{offset}
-	</select>
 
 </mapper>

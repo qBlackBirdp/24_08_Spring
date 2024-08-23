@@ -13,17 +13,43 @@ public class ReactionPointService {
 	@Autowired
 	private ReactionPointRepository reactionPointRepository;
 
-	public int toggleReactionPoint(int memberId, String relTypeCode, int relId) {
-		ReactionPoint reactionPoint = reactionPointRepository.getReactionPointByMemberIdAndRelId(memberId, relTypeCode,
-				relId);
+	public int toggleReactionPoint(int memberId, String relTypeCode, int relId, int newPoint) {
+		
+	    ReactionPoint existingReaction = reactionPointRepository.getReactionPointByMemberIdAndRelId(memberId, relTypeCode, relId);
 
-		if (reactionPoint != null) {
-			reactionPointRepository.deleteReactionPoint(memberId, relTypeCode, relId);
-			return -1; // 기존 좋아요 또는 싫어요를 취소함
-		} else {
-			reactionPointRepository.insertReactionPoint(memberId, relTypeCode, relId, 1);
-			return 1; // 새로 좋아요를 누름
-		}
+	    if (existingReaction == null) {
+	        // 현재 반응이 없을 경우 -> 새로운 반응을 추가
+	        reactionPointRepository.insertReactionPoint(memberId, relTypeCode, relId, newPoint);
+	        return newPoint;
+	    } 
+	    
+	    if (existingReaction.getPoint() == 1 && newPoint == 0) {
+	        // 현재 좋아요인 경우 -> 좋아요를 취소
+	        reactionPointRepository.deleteReactionPoint(memberId, relTypeCode, relId);
+	        return 0;
+	    } 
+	    
+	    if (existingReaction.getPoint() == -1 && newPoint == 0) {
+	        // 현재 싫어요인 경우 -> 싫어요를 취소
+	        reactionPointRepository.deleteReactionPoint(memberId, relTypeCode, relId);
+	        return 0;
+	    }
+	    
+	    if (existingReaction.getPoint() == 1 && newPoint == -1) {
+	        // 현재 좋아요인 경우 -> 싫어요로 변경
+	        reactionPointRepository.updateReactionPoint(memberId, relTypeCode, relId, -1);
+	        return -1;
+	    }
+	    
+	    if (existingReaction.getPoint() == -1 && newPoint == 1) {
+	        // 현재 싫어요인 경우 -> 좋아요로 변경
+	        reactionPointRepository.updateReactionPoint(memberId, relTypeCode, relId, 1);
+	        return 1;
+	    }
+	    
+	    // 동일한 반응을 눌렀을 경우 취소
+	    reactionPointRepository.deleteReactionPoint(memberId, relTypeCode, relId);
+	    return 0;
 	}
 
 	public int getTotalReactionPoints(String relTypeCode, int relId) {

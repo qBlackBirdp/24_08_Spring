@@ -94,13 +94,20 @@ public class ArticleService {
 	}
 
 	// 검색기능.
-	public int getTotalArticlesCountBySearch(int boardId, String searchField, String searchKeyword) {
-		return articleRepository.getTotalArticlesCountBySearch(boardId, searchField, searchKeyword);
-	}
+	public List<Article> getForPrintArticles(int boardId, int itemsInAPage, int page, String searchKeywordTypeCode,
+			String searchKeyword) {
 
-	public List<Article> getArticlesByPageAndSearch(int boardId, String searchField, String searchKeyword,
-			int itemsPerPage, int offset) {
-		return articleRepository.getArticlesByPageAndSearch(boardId, searchField, searchKeyword, itemsPerPage, offset);
+//		SELECT * FROM article WHERE boardId = 1 ORDER BY DESC LIMIT 0, 10; 1page
+//		SELECT * FROM article WHERE boardId = 1 ORDER BY DESC LIMIT 10, 10; 2page
+
+		int limitFrom = (page - 1) * itemsInAPage;
+		int limitTake = itemsInAPage;
+
+		return articleRepository.getForPrintArticles(boardId, limitFrom, limitTake, searchKeywordTypeCode,
+				searchKeyword);
+	}
+	public int getArticlesCount(int boardId, String searchKeywordTypeCode, String searchKeyword) {
+		return articleRepository.getArticleCount(boardId, searchKeywordTypeCode, searchKeyword);
 	}
 	//조회수
 	public ResultData increaseHitCount(int id) {
