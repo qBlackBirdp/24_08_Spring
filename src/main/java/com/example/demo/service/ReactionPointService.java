@@ -58,4 +58,8 @@ public class ReactionPointService {
 		Integer totalPoints = reactionPointRepository.getTotalReactionPoints(relTypeCode, relId);
 		return totalPoints != null ? totalPoints : 0;
 	}
+
+	public void updateArticleReactionPoints() {
+        reactionPointRepository.updateArticleReactionPoints();
+    }
 }

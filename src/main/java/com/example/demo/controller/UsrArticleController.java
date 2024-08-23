@@ -65,6 +65,7 @@ public class UsrArticleController {
         ResultData rd = ResultData.from("S-1", "리액션기능 실행완료.", "status", status);
         rd.setData2("reactedArticleId", id);
         
+        reactionPointService.updateArticleReactionPoints();
         
         return rd;
     }

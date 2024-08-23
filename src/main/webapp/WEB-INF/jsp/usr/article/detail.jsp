@@ -45,12 +45,7 @@ $(document).ready(function() {
             relTypeCode: relTypeCode,
             relId: relId,
             newPoint: point
-        }, function(response) {
-            if (response.resultCode.startsWith("S-")) {
-                alert(response.msg);
-            } else {
-                alert(response.msg);
-            }
+        }, function() {
             location.reload(); // 새로고침하여 결과 반영
         });
     }
