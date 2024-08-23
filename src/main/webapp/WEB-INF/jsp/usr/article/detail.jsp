@@ -33,38 +33,39 @@
 	})
 </script>
 <script>
-	function reaction(point) {
-		const articleId = ${article.id};
-		const relTypeCode = 'article';
-		const relId = articleId;
+$(document).ready(function() {
 
-		$.post('/article/doReaction', {
-			id : articleId,
-			relTypeCode : relTypeCode,
-			relId : relId,
-			newPoint : point
-		// 좋아요는 1, 싫어요는 -1로 설정
-		}, function(response) {
-			if (response.status === 'liked') {
-				alert('게시물 좋아요.');
-			} else if (response.status === 'unliked') {
-				alert('게시물 좋아요 취소.');
-			} else if (response.status === 'disliked') {
-				alert('게시물 싫어요.');
-			} else if (response.status === 'undisliked') {
-				alert('게시물 싫어요 취소.');
-			}
-		});
+    const articleId = ${article.id};
+    const relTypeCode = 'article';
+    const relId = articleId;
 
-	// 좋아요 버튼 클릭 시
-	$('#likeBtn').on('click', function() {
-		reaction(1); // 좋아요는 1로 설정
-	});
+    function reaction(point) {
+        $.post('/article/doReaction', {
+            id: articleId,
+            relTypeCode: relTypeCode,
+            relId: relId,
+            newPoint: point
+        }, function(response) {
+            if (response.resultCode.startsWith("S-")) {
+                alert(response.msg);
+            } else {
+                alert(response.msg);
+            }
+            location.reload(); // 새로고침하여 결과 반영
+        });
+    }
 
-	// 싫어요 버튼 클릭 시
-	$('#dislikeBtn').on('click', function() {
-		reaction(-1); // 싫어요는 -1로 설정
-	});
+    // 좋아요 버튼 클릭 시
+    $('#likeBtn').on('click', function() {
+        reaction(1); // 좋아요는 1로 설정
+    });
+
+    // 싫어요 버튼 클릭 시
+    $('#disLikeBtn').on('click', function() {
+        reaction(-1); // 싫어요는 -1로 설정
+    });
+
+});
 </script>
 
 
@@ -103,20 +104,21 @@
 		<span class="label">내용:</span> ${article.body}
 	</div>
 	<div>
-		<span class="label">Sum</span>${article.extra__sumReactionPoint}
+		<span class="label">Sum</span> ${article.sumReactionPoint}
 	</div>
 	<div>
-		<span class="label">LIKE</span>${article.extra__goodReactionPoint}
+		<span class="label">LIKE</span> ${article.goodReactionPoint}
 	</div>
 	<div>
-		<span class="label">Bad</span>${article.extra__badReactionPoint}
+		<span class="label">Bad</span> ${article.badReactionPoint}
 	</div>
-	<c:if test="${rq.isLogined()}">
-		<button id="likeBtn">👍</button>
-		<button id="disLikeBtn">👎</button>
-	</c:if>
-	👍<span id="likeCount" class="like-count">0</span>
-
+	<div class="detail-item">
+		<button id="likeBtn">👍 Like ${article.goodReactionPoint}</button>
+		<button id="disLikeBtn">👎 Dislike
+			${article.badReactionPoint}</button>
+	</div>
+<!-- 	👍<span id="likeCount" class="like-count">0</span>
+ -->
 	<div class="actions">
 		<c:if test="${article.userCanModify}">
 			<a href="../article/modify?id=${article.id}" class="btn">게시물 수정</a>
