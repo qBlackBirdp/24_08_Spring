@@ -51,14 +51,16 @@ public class UsrArticleController {
 	}
 	@RequestMapping("/article/doReaction")
     @ResponseBody
-    public Map<String, Object> doReaction(HttpServletRequest req ,@RequestParam int id, @RequestParam String relTypeCode, @RequestParam int relId) {
+    public ResultData doReaction(HttpServletRequest req ,@RequestParam int id, @RequestParam String relTypeCode, @RequestParam int relId) {
 		Rq rq = (Rq) req.getAttribute("rq");
 		
         int resultPoint = reactionPointService.toggleReactionPoint(rq.getLoginedMemberId(), relTypeCode, relId);
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", resultPoint > 0 ? "liked" : "unliked");
-        return response;
+        String status = resultPoint > 0 ? "liked" : "unliked";
+        ResultData<String> rd = ResultData.from("S-1", "좋아요기능 실행완료.", "status", status);
+        rd.setData2("reactedArticleId", id);
+        
+        return rd;
     }
 	
 	
