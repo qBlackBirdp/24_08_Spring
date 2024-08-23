@@ -70,6 +70,8 @@ public interface ArticleRepository {
 				FROM article AS A
 				INNER JOIN `member` AS M
 				ON A.memberId = M.id
+				LEFT JOIN reactionPoint AS RP
+				ON A.id = RP.relId AND RP.relTypeCode = 'article'
 				WHERE 1
 				<if test="boardId != 0">
 					AND boardId = #{boardId}

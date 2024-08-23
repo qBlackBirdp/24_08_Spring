@@ -28,6 +28,9 @@
 					<td>${article.regDate.substring(0, 10)}</td>
 					<td><a href="detail?id=${article.id}">${article.title}</a></td>
 					<td>${article.extra__writer}</td>
+					<td style="text-align: center;">${article.extra__sumReactionPoint}</td>
+					<td style="text-align: center;">${article.extra__goodReactionPoint}</td>
+					<td style="text-align: center;">${article.extra__badReactionPoint}</td>
 				</tr>
 			</c:forEach>
 		</c:if>
@@ -40,7 +43,51 @@
 	</div>
 </c:if>
 
+<c:if test="${totalPages > 0}">
+	<div class="pagination">
+		<c:set var="baseUri" value="?boardId=${boardId}" />
+		<c:if test="${searchField != null && !searchField.isEmpty() && searchKeyword != null && !searchKeyword.isEmpty()}">
+			<c:set var="baseUri" value="${baseUri}&searchField=${searchField}&searchKeyword=${searchKeyword}" />
+		</c:if>
 
+		<c:if test="${currentPage > 1}">
+			<a href="${baseUri}&page=${currentPage - 1}" class="btn">Previous</a>
+		</c:if>
+
+		<c:choose>
+			<c:when test="${currentPage == 1}">
+				<span class="current">1</span>
+			</c:when>
+			<c:otherwise>
+				<a href="${baseUri}&page=1" class="btn">1</a>
+			</c:otherwise>
+		</c:choose>
+
+		<c:forEach var="i" begin="${currentPage > 3 ? currentPage - 2 : 2}" end="${currentPage + 2 > totalPages ? totalPages - 1 : currentPage + 2}">
+			<c:choose>
+				<c:when test="${i == currentPage}">
+					<span class="current">${i}</span>
+				</c:when>
+				<c:otherwise>
+					<a href="${baseUri}&page=${i}" class="btn">${i}</a>
+				</c:otherwise>
+			</c:choose>
+		</c:forEach>
+
+		<c:choose>
+			<c:when test="${currentPage == totalPages}">
+				<span class="current">${totalPages}</span>
+			</c:when>
+			<c:otherwise>
+				<a href="${baseUri}&page=${totalPages}" class="btn">${totalPages}</a>
+			</c:otherwise>
+		</c:choose>
+
+		<c:if test="${currentPage < totalPages}">
+			<a href="${baseUri}&page=${currentPage + 1}" class="btn">Next</a>
+		</c:if>
+	</div>
+</c:if>
 
 <div class="search-bar">
 	<form action="/usr/article/list" method="GET">
