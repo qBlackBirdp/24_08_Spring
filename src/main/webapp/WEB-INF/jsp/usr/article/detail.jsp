@@ -60,8 +60,8 @@ $(document).ready(function() {
             if (response.resultCode.startsWith("S-")) {
             
                 // 좋아요/싫어요 개수 업데이트
-                $('#likeCounttt').text(response.data2.goodReactionPoint);
-                $('#disLikeCounttt').text(response.data2.badReactionPoint);
+                $('.likeCount').text(response.data2.goodReactionPoint);
+                $('.disLikeCount').text(response.data2.badReactionPoint);
 
                 // UI 업데이트
                 updateReactionUI(point);
@@ -145,16 +145,16 @@ $(document).ready(function() {
 		<span class="label">내용:</span> ${article.body}
 	</div>
 	<div>
-    	<span class="label">LIKE </span> <span id="likeCounttt">${article.goodReactionPoint}</span>
+    	<span class="label">LIKE </span> <span class="likeCount">${article.goodReactionPoint}</span>
 
-    	<span class="label">DISLIKE</span> <span id="disLikeCounttt">${article.badReactionPoint}</span>
+    	<span class="label">DISLIKE</span> <span class="disLikeCount">${article.badReactionPoint}</span>
 	</div>
 	<div class="detail-item">
 		<button id="likeBtn">
-			<i class="far fa-thumbs-up"></i> 좋아요
+			<i class="far fa-thumbs-up"></i> 좋아요 <span class="likeCount">${article.goodReactionPoint}</span>
 		</button>
 		<button id="disLikeBtn">
-			<i class="far fa-thumbs-down"></i> 싫어요
+			<i class="far fa-thumbs-down"></i> 싫어요 <span class="disLikeCount">${article.badReactionPoint}</span>
 		</button>
 	</div>
 	<!-- 	👍<span id="likeCount" class="like-count">0</span>

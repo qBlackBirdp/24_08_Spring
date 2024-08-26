@@ -17,8 +17,6 @@ public class ReactionPointService {
 		
 	    ReactionPoint existingReaction = reactionPointRepository.getReactionPointByMemberIdAndRelId(loginedMemberId, relTypeCode, relId);
 	    
-	    System.err.println(existingReaction);
-
 	    if (existingReaction == null) {
 	        // 현재 반응이 없을 경우 -> 새로운 반응을 추가
 	        reactionPointRepository.insertReactionPoint(loginedMemberId, relTypeCode, relId, newPoint);
