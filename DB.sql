@@ -24,7 +24,7 @@ CREATE TABLE `member`(
       updateDate DATETIME NOT NULL,
       loginId CHAR(30) NOT NULL,
       loginPw CHAR(100) NOT NULL,
-      `authLevel` SMALLINT(2) UNSIGNED DEFAULT 3 COMMENT '권한 레벨 (3=일반,7=관리자)',
+      authLevel SMALLINT(2) UNSIGNED DEFAULT 3 COMMENT '권한 레벨 (3=일반,7=관리자)',
       `name` CHAR(20) NOT NULL,
       nickname CHAR(20) NOT NULL,
       cellphoneNum CHAR(20) NOT NULL,
@@ -322,3 +322,8 @@ inner join (
 on A.id = RP_SUM.relId
 set A.goodReactionPoint = RP_SUM.goodReactionPoint,
 A.badReactionPoint = RP_SUM.badReactionPoint;
+
+SELECT * FROM reactionPoint 
+WHERE memberId = 4
+AND relTypeCode = 'article'
+AND relId = 2;

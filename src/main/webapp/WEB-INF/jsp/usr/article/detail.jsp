@@ -37,8 +37,8 @@ $(document).ready(function() {
     const articleId = ${article.id};
     const relTypeCode = 'article';
     const relId = articleId;
-    
- // 서버에서 전달받은 사용자 반응 상태
+
+    // 서버에서 전달받은 사용자 반응 상태
     const userReactionPoint = ${userReactionPoint}; // 1: 좋아요, -1: 싫어요, 0: 반응 없음
 
     // 페이지 로드 시 버튼 초기화
@@ -47,19 +47,26 @@ $(document).ready(function() {
     } else if (userReactionPoint === -1) {
         $('#disLikeBtn').addClass('disliked');
     }
-
     function reaction(point) {
+        // jQuery의 AJAX 메서드를 사용하여 서버와 비동기 통신
         $.post('/article/doReaction', {
             id: articleId,
             relTypeCode: relTypeCode,
             relId: relId,
             newPoint: point
         }, function(response) {
+        	console.log(response);
+            // 서버 응답 처리
             if (response.resultCode.startsWith("S-")) {
-                // UI 업데이트 부분
+            
+                // 좋아요/싫어요 개수 업데이트
+                $('#likeCounttt').text(response.data2.goodReactionPoint);
+                $('#disLikeCounttt').text(response.data2.badReactionPoint);
+
+                // UI 업데이트
                 updateReactionUI(point);
             } else {
-                alert(response.msg); // 필요한 경우 alert를 다시 추가
+                alert(response.msg); // 오류 메시지 출력
             }
         });
     }
@@ -99,6 +106,7 @@ $(document).ready(function() {
     });
 });
 
+
 </script>
 
 
@@ -137,13 +145,9 @@ $(document).ready(function() {
 		<span class="label">내용:</span> ${article.body}
 	</div>
 	<div>
-		<span class="label">Sum</span> ${article.sumReactionPoint}
-	</div>
-	<div>
-		<span class="label">LIKE</span> ${article.goodReactionPoint}
-	</div>
-	<div>
-		<span class="label">Bad</span> ${article.badReactionPoint}
+    	<span class="label">LIKE </span> <span id="likeCounttt">${article.goodReactionPoint}</span>
+
+    	<span class="label">DISLIKE</span> <span id="disLikeCounttt">${article.badReactionPoint}</span>
 	</div>
 	<div class="detail-item">
 		<button id="likeBtn">
