@@ -62,4 +62,12 @@ public class ReactionPointService {
 	public void updateArticleReactionPoints() {
         reactionPointRepository.updateArticleReactionPoints();
     }
+
+	public int getUserReactionPoint(int memberId, String relTypeCode, int relId) {
+		ReactionPoint reactionPoint = reactionPointRepository.getReactionPointByMemberIdAndRelId(memberId, relTypeCode, relId);
+        if (reactionPoint != null) {
+            return reactionPoint.getPoint(); // 1: 좋아요, -1: 싫어요, 0: 반응 없음
+        }
+		return 0;
+	}
 }

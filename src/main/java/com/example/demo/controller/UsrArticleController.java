@@ -46,6 +46,10 @@ public class UsrArticleController {
 		
 		int likeCount = reactionPointService.getTotalReactionPoints("article", id);
         model.addAttribute("likeCount", likeCount);
+        
+     // 사용자의 반응 상태 가져오기
+        int userReactionPoint = reactionPointService.getUserReactionPoint(rq.getLoginedMemberId(), "article", id);
+        model.addAttribute("userReactionPoint", userReactionPoint);
 
 		return "usr/article/detail";
 	}

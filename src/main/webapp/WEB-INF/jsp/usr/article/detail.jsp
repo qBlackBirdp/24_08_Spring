@@ -34,10 +34,19 @@
 </script>
 <script>
 $(document).ready(function() {
-
     const articleId = ${article.id};
     const relTypeCode = 'article';
     const relId = articleId;
+    
+ // 서버에서 전달받은 사용자 반응 상태
+    const userReactionPoint = ${userReactionPoint}; // 1: 좋아요, -1: 싫어요, 0: 반응 없음
+
+    // 페이지 로드 시 버튼 초기화
+    if (userReactionPoint === 1) {
+        $('#likeBtn').addClass('liked');
+    } else if (userReactionPoint === -1) {
+        $('#disLikeBtn').addClass('disliked');
+    }
 
     function reaction(point) {
         $.post('/article/doReaction', {
@@ -45,22 +54,51 @@ $(document).ready(function() {
             relTypeCode: relTypeCode,
             relId: relId,
             newPoint: point
-        }, function() {
-            location.reload(); // 새로고침하여 결과 반영
+        }, function(response) {
+            if (response.resultCode.startsWith("S-")) {
+                // UI 업데이트 부분
+                updateReactionUI(point);
+            } else {
+                alert(response.msg); // 필요한 경우 alert를 다시 추가
+            }
         });
+    }
+
+    function updateReactionUI(point) {
+        if (point > 0) {
+            // 좋아요 설정
+            $('#likeBtn').addClass('liked');
+            $('#disLikeBtn').removeClass('disliked');
+        } else if (point < 0) {
+            // 싫어요 설정
+            $('#disLikeBtn').addClass('disliked');
+            $('#likeBtn').removeClass('liked');
+        } else {
+            // 반응 취소 (좋아요 또는 싫어요)
+            $('#likeBtn').removeClass('liked');
+            $('#disLikeBtn').removeClass('disliked');
+        }
     }
 
     // 좋아요 버튼 클릭 시
     $('#likeBtn').on('click', function() {
-        reaction(1); // 좋아요는 1로 설정
+        if ($(this).hasClass('liked')) {
+            reaction(0); // 좋아요 취소
+        } else {
+            reaction(1); // 좋아요 설정
+        }
     });
 
     // 싫어요 버튼 클릭 시
     $('#disLikeBtn').on('click', function() {
-        reaction(-1); // 싫어요는 -1로 설정
+        if ($(this).hasClass('disliked')) {
+            reaction(0); // 싫어요 취소
+        } else {
+            reaction(-1); // 싫어요 설정
+        }
     });
-
 });
+
 </script>
 
 
@@ -108,11 +146,14 @@ $(document).ready(function() {
 		<span class="label">Bad</span> ${article.badReactionPoint}
 	</div>
 	<div class="detail-item">
-		<button id="likeBtn">👍 Like ${article.goodReactionPoint}</button>
-		<button id="disLikeBtn">👎 Dislike
-			${article.badReactionPoint}</button>
+		<button id="likeBtn">
+			<i class="far fa-thumbs-up"></i> 좋아요
+		</button>
+		<button id="disLikeBtn">
+			<i class="far fa-thumbs-down"></i> 싫어요
+		</button>
 	</div>
-<!-- 	👍<span id="likeCount" class="like-count">0</span>
+	<!-- 	👍<span id="likeCount" class="like-count">0</span>
  -->
 	<div class="actions">
 		<c:if test="${article.userCanModify}">
