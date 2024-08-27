@@ -9,6 +9,7 @@
 
 <section class="section">
 	<form action="../member/doLogin" method="POST">
+	<input type="hidden" name="afterLoginUri" value=${param.afterLoginUri }>
 		<table class="form-table">
 			<tbody>
 				<tr>

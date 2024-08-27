@@ -58,7 +58,9 @@ $(document).ready(function() {
 
             if (response.resultCode && response.resultCode.startsWith("F-A")) {
                 if (response.data1 && response.data1Name === "redirectUri") {
-                    window.location.replace(response.data1);
+                	var currentUri = encodeURIComponent(window.location.href);
+                    window.location.replace(response.data1 + '?afterLoginUri=' + currentUri);
+                    return;
                 }
             } else if (response.resultCode && response.resultCode.startsWith("S-")) {
                 updateReactionUI(point); // UI 업데이트

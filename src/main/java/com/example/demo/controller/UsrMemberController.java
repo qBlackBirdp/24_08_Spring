@@ -71,7 +71,7 @@ public class UsrMemberController {
 
 	@RequestMapping("/usr/member/doLogin")
 	@ResponseBody
-	public String doLogin(HttpServletRequest req, String loginId, String loginPw) {
+	public String doLogin(HttpServletRequest req, String loginId, String loginPw, String afterLoginUri) {
 
 		rq = (Rq) req.getAttribute("rq");
 
@@ -86,6 +86,8 @@ public class UsrMemberController {
 		}
 
 		rq.login(member);
+		
+		if(afterLoginUri.length() > 0) return Ut.jsReplace("S-1", Ut.f("%s님 환영합니다", member.getNickname()), afterLoginUri);
 
 		return Ut.jsReplace("S-1", Ut.f("%s님 환영합니다", member.getNickname()), " / ");
 	}
