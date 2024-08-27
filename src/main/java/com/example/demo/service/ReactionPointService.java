@@ -1,7 +1,5 @@
 package com.example.demo.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +14,8 @@ public class ReactionPointService {
 	public int toggleReactionPoint(int loginedMemberId, String relTypeCode, int relId, int newPoint) {
 		
 	    ReactionPoint existingReaction = reactionPointRepository.getReactionPointByMemberIdAndRelId(loginedMemberId, relTypeCode, relId);
+	    
+	    if(loginedMemberId == 0) return -3;
 	    
 	    if (existingReaction == null) {
 	        // 현재 반응이 없을 경우 -> 새로운 반응을 추가

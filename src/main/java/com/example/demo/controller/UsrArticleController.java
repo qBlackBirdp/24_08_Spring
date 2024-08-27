@@ -20,6 +20,8 @@ import com.example.demo.vo.Article;
 import com.example.demo.vo.Board;
 import com.example.demo.vo.ResultData;
 import com.example.demo.vo.Rq;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -34,56 +36,60 @@ public class UsrArticleController {
 
 	@Autowired
 	private BoardService boardService;
-	
+
 	@Autowired
-    private ReactionPointService reactionPointService;
+	private ReactionPointService reactionPointService;
 
 	@RequestMapping("/usr/article/detail")
-	public String showDetail( Model model, int id, HttpServletRequest req) {
+	public String showDetail(Model model, int id, HttpServletRequest req) {
 		Rq rq = (Rq) req.getAttribute("rq");
-		
+
 		Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
 
 		model.addAttribute("article", article);
-		
+
 		int likeCount = reactionPointService.getTotalReactionPoints("article", id);
-        model.addAttribute("likeCount", likeCount);
-                
-        // 사용자의 반응 상태 가져오기
-        int userReactionPoint = reactionPointService.getUserReactionPoint(rq.getLoginedMemberId(), "article", id);
-        model.addAttribute("userReactionPoint", userReactionPoint);
+		model.addAttribute("likeCount", likeCount);
+
+		// 사용자의 반응 상태 가져오기
+		int userReactionPoint = reactionPointService.getUserReactionPoint(rq.getLoginedMemberId(), "article", id);
+		model.addAttribute("userReactionPoint", userReactionPoint);
 
 		return "usr/article/detail";
 	}
-	
-	@RequestMapping("/article/doReaction")
-    @ResponseBody
-    public ResultData doReaction(HttpServletRequest req , Model model, int id, String relTypeCode, int relId, int newPoint) {
+
+	@RequestMapping("/usr/article/doReaction")
+	@ResponseBody
+	public ResultData doReaction(HttpServletRequest req, Model model, int id, String relTypeCode, int relId, int newPoint) {
 		Rq rq = (Rq) req.getAttribute("rq");
 		int loginedMemberId = rq.getLoginedMemberId();
 		model.addAttribute("loginedMemberId", loginedMemberId);
 		relTypeCode = "article";
-		
-        int resultPoint = reactionPointService.toggleReactionPoint(rq.getLoginedMemberId(), relTypeCode, relId, newPoint);        
-        reactionPointService.updateArticleReactionPoints();
-        
-        // 최신의 좋아요/싫어요 수를 가져옴
-        Article updatedArticle = articleService.getForPrintArticle(loginedMemberId, id);
-        
-        String status = resultPoint > 0 ? "liked" : "unliked";
-        ResultData rd = ResultData.from("S-1", "리액션기능 실행완료.", "status", status);
-        rd.setData2("reactedArticleId", id);
-        
-        Map<String, Object> reactionPoints = new HashMap<>();
-        reactionPoints.put("goodReactionPoint", updatedArticle.getGoodReactionPoint());
-        reactionPoints.put("badReactionPoint", updatedArticle.getBadReactionPoint());
 
-        rd.setData2("reactionPoints", reactionPoints);
+		int resultPoint = reactionPointService.toggleReactionPoint(rq.getLoginedMemberId(), relTypeCode, relId,
+				newPoint);
+		reactionPointService.updateArticleReactionPoints();
 
-        return rd;
-    }
+		ResultData loginRd = ResultData.from("", "");
 
-	
+		if (resultPoint == -3) return ResultData.from("F-A", "로그인 필요.", "redirectUri", "/usr/member/login");
+			//return Ut.jsReplace("F-A", "로그인 필요.", "/usr/member/login");
+		// 최신의 좋아요/싫어요 수를 가져옴
+		Article updatedArticle = articleService.getForPrintArticle(loginedMemberId, id);
+
+		String status = resultPoint > 0 ? "liked" : "unliked";
+		ResultData rd = ResultData.from("S-1", "리액션기능 실행완료.", "status", status);
+		rd.setData2("reactedArticleId", id);
+
+		Map<String, Object> reactionPoints = new HashMap<>();
+		reactionPoints.put("goodReactionPoint", updatedArticle.getGoodReactionPoint());
+		reactionPoints.put("badReactionPoint", updatedArticle.getBadReactionPoint());
+
+		rd.setData2("reactionPoints", reactionPoints);
+
+		return rd;
+	}
+
 	@RequestMapping("/usr/article/doIncreaseHitCountRd")
 	@ResponseBody
 	public ResultData doIncreaseHitCount(int id) {

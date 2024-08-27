@@ -48,29 +48,27 @@ $(document).ready(function() {
         $('#disLikeBtn').addClass('disliked');
     }
     function reaction(point) {
-        // jQuery의 AJAX 메서드를 사용하여 서버와 비동기 통신
-        $.post('/article/doReaction', {
+        $.post('/usr/article/doReaction', {
             id: articleId,
             relTypeCode: relTypeCode,
             relId: relId,
             newPoint: point
         }, function(response) {
-        	console.log(response);
-            // 서버 응답 처리
-            if (response.resultCode.startsWith("S-")) {
-            
-                // 좋아요/싫어요 개수 업데이트
-                $('.likeCount').text(response.data2.goodReactionPoint);
-                $('.disLikeCount').text(response.data2.badReactionPoint);
+            console.log(response);
 
-                // UI 업데이트
-                updateReactionUI(point);
+            if (response.resultCode && response.resultCode.startsWith("F-A")) {
+                if (response.data1 && response.data1Name === "redirectUri") {
+                    window.location.replace(response.data1);
+                }
+            } else if (response.resultCode && response.resultCode.startsWith("S-")) {
+                updateReactionUI(point); // UI 업데이트
+                $('#likeCounttt').text(response.data2.reactionPoints.goodReactionPoint);
+                $('#disLikeCounttt').text(response.data2.reactionPoints.badReactionPoint);
             } else {
-                alert(response.msg); // 오류 메시지 출력
+                alert(response.msg);
             }
         });
     }
-
     function updateReactionUI(point) {
         if (point > 0) {
             // 좋아요 설정
