@@ -157,8 +157,7 @@ $(document).ready(function() {
 			<i class="far fa-thumbs-down"></i> 싫어요 <span class="disLikeCount">${article.badReactionPoint}</span>
 		</button>
 	</div>
-	<!-- 	👍<span id="likeCount" class="like-count">0</span>
- -->
+	<!-- 	👍<span id="likeCount" class="like-count">0</span> -->
 	<div class="actions">
 		<c:if test="${article.userCanModify}">
 			<a href="../article/modify?id=${article.id}" class="btn">게시물 수정</a>
@@ -168,6 +167,33 @@ $(document).ready(function() {
 		</c:if>
 	</div>
 </div>
+
+<div class="comments-section">
+  	<c:if test="${rq.isLogined()}">
+    <form action="/usr/reply/doWrite" method="post" class="comment-form">
+        <input type="hidden" name="relTypeCode" value="article">
+        <input type="hidden" name="relId" value="${article.id}">
+        <textarea name="body" placeholder="댓글을 입력하세요" required></textarea>
+        <div class="comment-form-actions">
+            <button type="submit">댓글 작성</button>
+        </div>
+    </form>
+</c:if>
+
+
+    <c:if test="${!rq.isLogined()}">
+        <p>댓글 작성 <a href="/usr/member/login" class="btn">로그인</a> 필요.</p>
+    </c:if>
+    <h3>Comments</h3>
+    <c:forEach var="reply" items="${replies}">
+        <div class="comment-item">
+            <span class="comment-author">Member ID: ${reply.extra__writer}</span>
+            <span class="comment-date">${reply.regDate}</span>
+            <p class="comment-body">${reply.body}</p>
+        </div>
+    </c:forEach>
+</div>
+
 
 <div class="navigation">
 	<a href="../home/main" class="btn ml-2 mr-2">메인 페이지로</a> <a href="list"

@@ -26,7 +26,7 @@
 				<tr>
 					<td>${article.id}</td>
 					<td>${article.regDate.substring(0, 10)}</td>
-					<td><a href="detail?id=${article.id}">${article.title}</a></td>
+					<td><a href="detail?id=${article.id}">${article.title}</a>${article.replyCount }</td>
 					<td>${article.extra__writer}</td>
 					<td style="text-align: center;">${article.sumReactionPoint}</td>
 					<td style="text-align: center;">${article.goodReactionPoint}</td>

@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.demo.service.ArticleService;
 import com.example.demo.service.BoardService;
 import com.example.demo.service.ReactionPointService;
+import com.example.demo.service.ReplyService;
 import com.example.demo.util.Ut;
 import com.example.demo.vo.Article;
 import com.example.demo.vo.Board;
+import com.example.demo.vo.Reply;
 import com.example.demo.vo.ResultData;
 import com.example.demo.vo.Rq;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -39,6 +39,9 @@ public class UsrArticleController {
 
 	@Autowired
 	private ReactionPointService reactionPointService;
+	
+	@Autowired
+	private ReplyService replyService;
 
 	@RequestMapping("/usr/article/detail")
 	public String showDetail(Model model, int id, HttpServletRequest req) {
@@ -50,6 +53,13 @@ public class UsrArticleController {
 
 		int likeCount = reactionPointService.getTotalReactionPoints("article", id);
 		model.addAttribute("likeCount", likeCount);
+		
+		// 댓글 데이터를 가져와서 모델에 추가
+		List<Reply> replies = replyService.getForPrintReplies("article", id);
+
+		int repliesCount = replies.size();
+		model.addAttribute("replies", replies);
+		model.addAttribute("repliesCount", repliesCount);
 
 		// 사용자의 반응 상태 가져오기
 		int userReactionPoint = reactionPointService.getUserReactionPoint(rq.getLoginedMemberId(), "article", id);
@@ -224,12 +234,15 @@ public class UsrArticleController {
 
 		List<Article> articles = articleService.getForPrintArticles(boardId, itemsInAPage, page, searchKeywordTypeCode,
 				searchKeyword);
+		List<Article> articles1 = articleService.getForPrintArticlesWithReplyCount(boardId, itemsInAPage, page, searchKeywordTypeCode, searchKeyword);
 
 		if (board == null) {
 			return rq.historyBackOnView("없는 게시판임");
 		}
+		
 
 		model.addAttribute("articles", articles);
+		
 		model.addAttribute("articlesCount", articlesCount);
 		model.addAttribute("pagesCount", pagesCount);
 		model.addAttribute("board", board);

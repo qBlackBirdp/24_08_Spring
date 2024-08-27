@@ -212,6 +212,72 @@ relTypeCode = 'article',
 relId = 1,
 `point` = 1;
 
+# article 테이블에 reactionPoint(좋아요) 관련 컬럼 추가
+ALTER TABLE article ADD COLUMN goodReactionPoint INT(10) UNSIGNED NOT NULL DEFAULT 0;
+ALTER TABLE article ADD COLUMN badReactionPoint INT(10) UNSIGNED NOT NULL DEFAULT 0;
+
+## update join -> 기존 게시글의 good bad RP 값을 RP 테이블에서 추출해서 article table에 채운다
+update article as A
+inner join (
+    select RP.relTypeCode, Rp.relId,
+    SUM(IF(RP.point > 0,RP.point,0)) AS goodReactionPoint,
+    SUM(IF(RP.point < 0,RP.point * -1,0)) AS badReactionPoint
+    from reactionPoint As RP
+    group by RP.relTypeCode,Rp.relId
+) as RP_SUM
+on A.id = RP_SUM.relId
+set A.goodReactionPoint = RP_SUM.goodReactionPoint,
+A.badReactionPoint = RP_SUM.badReactionPoint;
+
+# reply 테이블 생성
+CREATE TABLE reply (
+    id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    regDate DATETIME NOT NULL,
+    updateDate DATETIME NOT NULL,
+    memberId INT(10) UNSIGNED NOT NULL,
+    relTypeCode CHAR(50) NOT NULL COMMENT '관련 데이터 타입 코드',
+    relId INT(10) NOT NULL COMMENT '관련 데이터 번호',
+    `body`TEXT NOT NULL
+);
+
+# 2번 회원이 1번 글에 댓글 작성
+INSERT INTO reply
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 2,
+relTypeCode = 'article',
+relId = 1,
+`body` = '댓글 1';
+
+# 2번 회원이 1번 글에 댓글 작성
+INSERT INTO reply
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 2,
+relTypeCode = 'article',
+relId = 1,
+`body` = '댓글 2';
+
+# 3번 회원이 1번 글에 댓글 작성
+INSERT INTO reply
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 3,
+relTypeCode = 'article',
+relId = 1,
+`body` = '댓글 3';
+
+# 3번 회원이 1번 글에 댓글 작성
+INSERT INTO reply
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 2,
+relTypeCode = 'article',
+relId = 2,
+`body` = '댓글 4';
+
+
+
 ###(INIT 끝)
 ##########################################
 SELECT *
@@ -223,6 +289,8 @@ SELECT * FROM board;
 SELECT * FROM `member`;
 
 SELECT * FROM `reactionPoint`;
+
+SELECT * FROM reply;
 
 ###############################################################################
 
@@ -327,3 +395,8 @@ SELECT * FROM reactionPoint
 WHERE memberId = 4
 AND relTypeCode = 'article'
 AND relId = 2;
+
+SELECT * FROM reply r
+INNER JOIN article a
+ON r.relId = a.id
+WHERE replyTypeCode = 'article' AND relId = 1;

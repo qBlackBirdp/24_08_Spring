@@ -28,4 +28,7 @@ public class Article {
 	private int badReactionPoint;
 	
 	private int page;
+	
+	private int replyCount;
+    
 }
