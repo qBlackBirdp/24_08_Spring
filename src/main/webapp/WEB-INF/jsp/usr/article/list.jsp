@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <c:set var="pageTitle" value="${board.code} 목록"></c:set>
@@ -26,7 +27,10 @@
 				<tr>
 					<td>${article.id}</td>
 					<td>${article.regDate.substring(0, 10)}</td>
-					<td><a href="detail?id=${article.id}">${article.title}</a>${article.replyCount }</td>
+					<td><a href="detail?id=${article.id}">${article.title}</a> <c:if
+							test="${article.extra__repliesCount > 0 }">
+							<span style="color: red;">[${article.extra__repliesCount }]</span>
+						</c:if>
 					<td>${article.extra__writer}</td>
 					<td style="text-align: center;">${article.sumReactionPoint}</td>
 					<td style="text-align: center;">${article.goodReactionPoint}</td>
@@ -38,7 +42,8 @@
 </table>
 
 <c:if test="${rq.isLogined()}">
-	<div style="text-align: right; margin-bottom: 10px; margin-right: 20px;">
+	<div
+		style="text-align: right; margin-bottom: 10px; margin-right: 20px;">
 		<a href="write" class="btn">게시물 작성하기</a>
 	</div>
 </c:if>
@@ -46,8 +51,10 @@
 <c:if test="${totalPages > 0}">
 	<div class="pagination">
 		<c:set var="baseUri" value="?boardId=${boardId}" />
-		<c:if test="${searchField != null && !searchField.isEmpty() && searchKeyword != null && !searchKeyword.isEmpty()}">
-			<c:set var="baseUri" value="${baseUri}&searchField=${searchField}&searchKeyword=${searchKeyword}" />
+		<c:if
+			test="${searchField != null && !searchField.isEmpty() && searchKeyword != null && !searchKeyword.isEmpty()}">
+			<c:set var="baseUri"
+				value="${baseUri}&searchField=${searchField}&searchKeyword=${searchKeyword}" />
 		</c:if>
 
 		<c:if test="${currentPage > 1}">
@@ -63,7 +70,8 @@
 			</c:otherwise>
 		</c:choose>
 
-		<c:forEach var="i" begin="${currentPage > 3 ? currentPage - 2 : 2}" end="${currentPage + 2 > totalPages ? totalPages - 1 : currentPage + 2}">
+		<c:forEach var="i" begin="${currentPage > 3 ? currentPage - 2 : 2}"
+			end="${currentPage + 2 > totalPages ? totalPages - 1 : currentPage + 2}">
 			<c:choose>
 				<c:when test="${i == currentPage}">
 					<span class="current">${i}</span>
@@ -92,18 +100,20 @@
 <div class="search-bar">
 	<form action="/usr/article/list" method="GET">
 		<div class="search-container">
-			<select name="searchField" class="search-field-select" data-value="${searchField}">
+			<select name="searchField" class="search-field-select"
+				data-value="${searchField}">
 				<option value="title" ${searchField == 'title' ? 'selected' : ''}>제목</option>
 				<option value="body" ${searchField == 'body' ? 'selected' : ''}>내용</option>
-				<option value="extra__writer" ${searchField == 'extra__writer' ? 'selected' : ''}>작성자</option>
-			</select>
-			<input type="text" name="searchKeyword" class="search-input" placeholder="검색어를 입력하세요" value="${searchKeyword}">
+				<option value="extra__writer"
+					${searchField == 'extra__writer' ? 'selected' : ''}>작성자</option>
+			</select> <input type="text" name="searchKeyword" class="search-input"
+				placeholder="검색어를 입력하세요" value="${searchKeyword}">
 
 			<button type="submit" class="search-button">검색</button>
 		</div>
 
-		<input type="hidden" name="boardId" value="${boardId}">
-		<input type="hidden" name="page" value="1">
+		<input type="hidden" name="boardId" value="${boardId}"> <input
+			type="hidden" name="page" value="1">
 	</form>
 </div>
 

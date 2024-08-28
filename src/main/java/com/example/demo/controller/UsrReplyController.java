@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.demo.service.ReactionPointService;
 import com.example.demo.service.ReplyService;
 import com.example.demo.util.Ut;
-import com.example.demo.vo.Article;
 import com.example.demo.vo.ResultData;
 import com.example.demo.vo.Rq;
 

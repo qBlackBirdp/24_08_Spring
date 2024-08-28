@@ -35,4 +35,8 @@ public interface ReplyRepository {
 
 	@Select("SELECT LAST_INSERT_ID();")
 	public int getLastInsertId();
+
+	@Select("SELECT COUNT(*) FROM reply WHERE relTypeCode = 'article' AND relId = #{articleId}")
+	public int getRepliesCountByArticleId(int articleId);
+	
 }

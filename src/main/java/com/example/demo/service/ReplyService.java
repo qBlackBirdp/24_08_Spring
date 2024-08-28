@@ -33,6 +33,6 @@ public class ReplyService {
 	}
 
 	public int getRepliesCountByArticleId(int articleId) {
-		return 0;
+	    return replyRepository.getRepliesCountByArticleId(articleId);
 	}
 }

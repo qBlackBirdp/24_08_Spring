@@ -19,6 +19,7 @@ public class Article {
 	
 	private int hitCount;
 	private String extra__writer;
+	private int extra__repliesCount;
 	
 	private boolean UserCanModify;
 	private boolean UserCanDelete;

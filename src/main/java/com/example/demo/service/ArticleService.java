@@ -19,20 +19,6 @@ public class ArticleService {
 	@Autowired
 	private ReplyService replyService;
 
-	public List<Article> getForPrintArticlesWithReplyCount(int boardId, int itemsInAPage, int page,
-			String searchKeywordTypeCode, String searchKeyword) {
-
-		List<Article> articles = articleRepository.getForPrintArticles(boardId, itemsInAPage, page,
-				searchKeywordTypeCode, searchKeyword);
-
-		for (Article article : articles) {
-			int replyCount = replyService.getRepliesCountByArticleId(article.getId());
-			article.setReplyCount(replyCount); // Article 클래스에 replyCount 필드를 추가해야 함
-		}
-
-		return articles;
-	}
-
 	public ArticleService(ArticleRepository articleRepository) {
 		this.articleRepository = articleRepository;
 	}

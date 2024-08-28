@@ -232,15 +232,14 @@ public class UsrArticleController {
 
 		int pagesCount = (int) Math.ceil(articlesCount / (double) itemsInAPage);
 
-		List<Article> articles = articleService.getForPrintArticles(boardId, itemsInAPage, page, searchKeywordTypeCode,
-				searchKeyword);
-		List<Article> articles1 = articleService.getForPrintArticlesWithReplyCount(boardId, itemsInAPage, page, searchKeywordTypeCode, searchKeyword);
-
+		List<Article> articles = articleService.getForPrintArticles(boardId, itemsInAPage, page, searchKeywordTypeCode, searchKeyword);
+		
 		if (board == null) {
 			return rq.historyBackOnView("없는 게시판임");
 		}
 		
-
+		System.out.println(articles);
+		
 		model.addAttribute("articles", articles);
 		
 		model.addAttribute("articlesCount", articlesCount);
