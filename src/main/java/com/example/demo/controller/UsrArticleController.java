@@ -55,8 +55,8 @@ public class UsrArticleController {
 		model.addAttribute("likeCount", likeCount);
 		
 		// 댓글 데이터를 가져와서 모델에 추가
-		List<Reply> replies = replyService.getForPrintReplies("article", id);
-
+		List<Reply> replies = replyService.getForPrintReplies(rq.getLoginedMemberId(), "article", id);
+		
 		int repliesCount = replies.size();
 		model.addAttribute("replies", replies);
 		model.addAttribute("repliesCount", repliesCount);

@@ -105,8 +105,6 @@ $(document).ready(function() {
         }
     });
 });
-
-
 </script>
 
 
@@ -190,6 +188,17 @@ $(document).ready(function() {
             <span class="comment-author">Member ID: ${reply.extra__writer}</span>
             <span class="comment-date">${reply.regDate}</span>
             <p class="comment-body">${reply.body}</p>
+            <span style="text-align: center;">
+							<c:if test="${reply.userCanModify }">
+								<a class="btn btn-outline btn-xs btn-success" href="../reply/modify?id=${reply.id }">수정</a>
+							</c:if>
+						</span>
+						<span style="text-align: center;">
+							<c:if test="${reply.userCanDelete }">
+								<a class="btn btn-outline btn-xs btn-error" onclick="if(confirm('정말 삭제?') == false) return false;"
+									href="../reply/doDelete?id=${reply.id }">삭제</a>
+							</c:if>
+						</span>
         </div>
     </c:forEach>
 </div>
