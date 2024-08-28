@@ -106,7 +106,47 @@ $(document).ready(function() {
     });
 });
 </script>
-
+<!-- 댓글 수정 -->
+<script>
+function toggleModifybtn(replyId) {
+	
+	console.log(replyId);
+	
+	$('#modify-btn-'+replyId).hide();
+	$('#save-btn-'+replyId).show();
+	$('#reply-'+replyId).hide();
+	$('#modify-form-'+replyId).show();
+}
+function doModifyReply(replyId) {
+	 console.log(replyId); // 디버깅을 위해 replyId를 콘솔에 출력
+	    
+	    // form 요소를 정확하게 선택
+	    var form = $('#modify-form-' + replyId);
+	    console.log(form); // 디버깅을 위해 form을 콘솔에 출력
+	    // form 내의 input 요소의 값을 가져옵니다
+	    var text = form.find('textarea[name="reply-text-' + replyId + '"]').val();
+	    console.log(text); // 디버깅을 위해 text를 콘솔에 출력
+	    // form의 action 속성 값을 가져옵니다
+	    var action = form.attr('action');
+	    console.log(action); // 디버깅을 위해 action을 콘솔에 출력
+	
+    $.post({
+    	url: '/usr/reply/doModify', // 수정된 URL
+        type: 'POST', // GET에서 POST로 변경
+        data: { id: replyId, body: text }, // 서버에 전송할 데이터
+        success: function(data) {
+        	$('#modify-form-'+replyId).hide();
+        	$('#reply-'+replyId).text(data);
+        	$('#reply-'+replyId).show();
+        	$('#save-btn-'+replyId).hide();
+        	$('#modify-btn-'+replyId).show();
+        },
+        error: function(xhr, status, error) {
+            alert('댓글 수정에 실패했습니다: ' + error);
+        }
+	})
+}
+</script>
 
 <hr />
 
@@ -167,17 +207,16 @@ $(document).ready(function() {
 </div>
 
 <div class="comments-section">
-  	<c:if test="${rq.isLogined()}">
-    <form action="/usr/reply/doWrite" method="post" class="comment-form">
-        <input type="hidden" name="relTypeCode" value="article">
-        <input type="hidden" name="relId" value="${article.id}">
-        <textarea name="body" placeholder="댓글을 입력하세요" required></textarea>
-        <div class="comment-form-actions">
-            <button type="submit">댓글 작성</button>
-        </div>
-    </form>
-</c:if>
-
+    <c:if test="${rq.isLogined()}">
+        <form action="/usr/reply/doWrite" method="post" class="comment-form">
+            <input type="hidden" name="relTypeCode" value="article">
+            <input type="hidden" name="relId" value="${article.id}">
+            <textarea name="body" placeholder="댓글을 입력하세요" required></textarea>
+            <div class="comment-form-actions">
+                <button type="submit">댓글 작성</button>
+            </div>
+        </form>
+    </c:if>
 
     <c:if test="${!rq.isLogined()}">
         <p>댓글 작성 <a href="/usr/member/login" class="btn">로그인</a> 필요.</p>
@@ -187,21 +226,28 @@ $(document).ready(function() {
         <div class="comment-item">
             <span class="comment-author">Member ID: ${reply.extra__writer}</span>
             <span class="comment-date">${reply.regDate}</span>
-            <p class="comment-body">${reply.body}</p>
-            <span style="text-align: center;">
-							<c:if test="${reply.userCanModify }">
-								<a class="btn btn-outline btn-xs btn-success" href="../reply/modify?id=${reply.id }">수정</a>
-							</c:if>
-						</span>
-						<span style="text-align: center;">
-							<c:if test="${reply.userCanDelete }">
-								<a class="btn btn-outline btn-xs btn-error" onclick="if(confirm('정말 삭제?') == false) return false;"
-									href="../reply/doDelete?id=${reply.id }">삭제</a>
-							</c:if>
-						</span>
+            <p id="reply-${reply.id}" class="comment-body">${reply.body}</p>
+            
+            <!-- 수정 버튼 -->
+            <c:if test="${reply.userCanModify}">
+                <button id="modify-btn-${reply.id}" onclick="toggleModifybtn(${reply.id})" class="btn btn-outline btn-xs btn-success">수정</button>
+            </c:if>
+            
+            <!-- 삭제 버튼 -->
+            <c:if test="${reply.userCanDelete}">
+                <a class="btn btn-outline btn-xs btn-error" onclick="if(confirm('정말 삭제?') == false) return false;" href="../reply/doDelete?id=${reply.id}">삭제</a>
+            </c:if>
+            
+            <!-- 댓글 수정 폼 -->
+            <div id="modify-form-${reply.id}" class="comment-modify-form" style="display: none;">
+                <input type="hidden" name="reply-id" value="${reply.id}">
+                <textarea name="reply-text-${reply.id}" rows="3">${reply.body}</textarea>
+                <button type="button" onclick="doModifyReply(${reply.id})" id="save-btn-${reply.id}" class="btn btn-outline btn-xs btn-primary">저장</button>
+            </div>
         </div>
     </c:forEach>
 </div>
+
 
 
 <div class="navigation">
