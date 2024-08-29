@@ -101,4 +101,14 @@ public class UsrMemberController {
 
 		return Ut.jsReplace("S-1", Ut.f("로그아웃 성공"), " / ");
 	}
+	
+	@RequestMapping("/usr/member/myPage")
+	public String showmyPage() {
+		return "usr/member/myPage";
+	}
+
+	@RequestMapping("/usr/member/checkPw")
+	public String showCheckPw() {
+		return "usr/member/checkPw";
+	}
 }
