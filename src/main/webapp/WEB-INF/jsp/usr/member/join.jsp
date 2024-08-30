@@ -24,7 +24,7 @@
 				<tr>
 					<th>비밀번호 확인</th>
 					<td><input name="loginPwConfirm" id="loginPwConfirm"
-						autocomplete="off" type="text" placeholder="비밀번호를 다시 입력해"
+						autocomplete="off" type="text" placeholder="비밀번호를 확인 입력해"
 						required /></td>
 				</tr>
 				<tr>

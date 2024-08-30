@@ -65,7 +65,7 @@ a:hover {
 /* 공통 폼 스타일 */
 form {
 	width: 100%;
-	max-width: 400px;
+	max-width: none;
 	margin: 0 auto;
 	padding: 20px;
 	background-color: #1e1e1e;
@@ -557,3 +557,62 @@ li:hover .sub-menu {
     outline: none;
 }
 
+/* 전체 레이아웃 확장 */
+.article-section {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* 에디터 크기 조정 */
+.toast-ui-editor {
+    height: 400px; /* 에디터 높이 조정 */
+    margin-top: 20px;
+    border: 1px solid #333;
+    background-color: #121212;
+}
+
+/* 에디터의 placeholder 텍스트 색상 변경 */
+.toastui-editor-contents::placeholder {
+    color: #c7c7c7; /* placeholder 텍스트 색상을 밝은 회색으로 설정 */
+    opacity: 1; /* 브라우저에 따라 opacity 설정이 필요할 수 있습니다. */
+}
+
+/* 폼 내부 레이아웃 조정 */
+.form-group-custom {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group-custom label {
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: #c7c7c7;
+}
+
+.form-group-custom input[type="text"],
+.form-select-custom {
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #444;
+    background-color: #2c2c2c;
+    color: #e0e0e0;
+    border-radius: 4px;
+}
+
+/* 제출 버튼 스타일 */
+input[type="submit"] {
+    width: 100%;
+    padding: 15px;
+    font-size: 18px;
+    background-color: #2a9d8f;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+}

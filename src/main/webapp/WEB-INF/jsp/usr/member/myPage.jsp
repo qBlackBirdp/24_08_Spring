@@ -3,12 +3,11 @@
 <c:set var="pageTitle" value="MYPAGE"></c:set>
 <%@ include file="../common/head.jspf"%>
 <hr />
-
 <section class="mt-24 text-xl px-4">
 	<div class="mx-auto">
-		<form action="../member/doCheckPw" method="POST">
 			<table class="table" border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
 				<tbody>
+				${rq.loginedMember}
 					<tr>
 						<th>가입일</th>
 						<td style="text-align: center;">${rq.loginedMember.regDate }</td>
@@ -45,7 +44,6 @@
 					</tr>
 				</tbody>
 			</table>
-		</form>
 		<div class="btns">
 			<button class="btn" type="button" onclick="history.back()">뒤로가기</button>
 		</div>

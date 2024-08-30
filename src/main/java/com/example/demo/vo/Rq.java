@@ -17,31 +17,32 @@ import lombok.Getter;
 @Component
 @Scope(value = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class Rq {
-	
+
 	@Getter
-	private boolean isLogined = false;
+	private boolean isLogined;
 	@Getter
-	private int loginedMemberId = 0;
+	private int loginedMemberId;
 	@Getter
 	private Member loginedMember;
-	
+
 	private HttpServletRequest req;
 	private HttpServletResponse resp;
-	
+
 	private HttpSession session;
-	
+
 	public Rq(HttpServletRequest req, HttpServletResponse resp, MemberService memberService) {
 		this.req = req;
 		this.resp = resp;
 		this.session = req.getSession();
-		
+
 		HttpSession httpSession = req.getSession();
-		
+
 		if (httpSession.getAttribute("loginedMemberId") != null) {
 			isLogined = true;
 			loginedMemberId = (int) httpSession.getAttribute("loginedMemberId");
 			loginedMember = memberService.getMemberById(loginedMemberId);
 		}
+
 		this.req.setAttribute("rq", this);
 	}
 
@@ -66,7 +67,7 @@ public class Rq {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void logout() {
 		session.removeAttribute("loginedMemberId");
 		session.removeAttribute("loginedMember");
@@ -76,6 +77,7 @@ public class Rq {
 		session.setAttribute("loginedMemberId", member.getId());
 		session.setAttribute("loginedMember", member);
 	}
+
 	public void initBeforeActionInterceptor() {
 		System.err.println("initBeforeActionInterceptor 실행");
 	}
@@ -85,15 +87,20 @@ public class Rq {
 		req.setAttribute("historyBack", true);
 		return "usr/common/js";
 	}
-	
+
 	public String getCurrentUri() {
 		String currentUri = req.getRequestURI();
 		String queryString = req.getQueryString();
-		
+
+		System.err.println(currentUri);
+		System.err.println(queryString);
+
 		if (currentUri != null && queryString != null) {
 			currentUri += "?" + queryString;
 		}
-		
+
+		System.out.println(currentUri);
+
 		return currentUri;
 	}
 }
