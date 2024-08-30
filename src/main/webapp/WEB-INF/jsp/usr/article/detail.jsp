@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <c:set var="pageTitle" value="게시물 상세보기"></c:set>
 <%@ include file="../common/head.jspf"%>
+<%@ include file="../common/toastUiEditorLib.jspf"%>
 
 <script>
 	const params = {};
@@ -180,7 +181,10 @@ function doModifyReply(replyId) {
 		<span class="label">제목:</span> ${article.title}
 	</div>
 	<div class="detail-item">
-		<span class="label">내용:</span> ${article.body}
+		<span class="label">내용:</span>
+		<div class="toast-ui-viewer">
+			<script type="text/x-template">${article.body}</script>
+		</div>
 	</div>
 	<div>
     	<span class="label">LIKE </span> <span class="likeCount">${article.goodReactionPoint}</span>
